@@ -1,0 +1,42 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ui", "Ui", "{9A9CD6D3-5087-4AA9-9F92-28D4972BE00D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".shared", ".shared", "{9451ACC5-F1DB-495A-BBAF-9F983776F7A4}"
+	ProjectSection(SolutionItems) = preProject
+		.shared\SharedAssemblyInfo.cs = .shared\SharedAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ui.ConsoleApp", "Ui\Ui.ConsoleApp\Ui.ConsoleApp.csproj", "{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://sab-team.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Ui\\Ui.ConsoleApp\\Ui.ConsoleApp.csproj
+		SccProjectTopLevelParentUniqueName1 = pping.sln
+		SccProjectName1 = Ui/Ui.ConsoleApp
+		SccLocalPath1 = Ui\\Ui.ConsoleApp
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB} = {9A9CD6D3-5087-4AA9-9F92-28D4972BE00D}
+	EndGlobalSection
+EndGlobal
