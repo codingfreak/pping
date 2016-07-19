@@ -99,6 +99,20 @@
                 },
                 new CommandlineArgumentInfo
                 {
+                    Abbreviation = "elsc",
+                    ArgumentName = "elsucesscount",
+                    Description = "If set, the app will return the amount of successfull pings as the error level.",
+                    IsFlag = true
+                },
+                new CommandlineArgumentInfo
+                {
+                    Abbreviation = "elf",
+                    ArgumentName = "elflag",
+                    Description = "If set, the app will return error level 0 on any open ping and error level 1 if all pings resulted in closed port.",
+                    IsFlag = true
+                },
+                new CommandlineArgumentInfo
+                {
                     Abbreviation = "w",
                     ArgumentName = "waittime",
                     Description = "",
@@ -233,6 +247,16 @@
                     }
                 }
                 Console.WriteLine("Finished pinging host {0} (IP:{1}). {2} pings sent ({3} OPEN, {4} CLOSED)", givenValue, hostIp, currentPack, reachablePorts, closedPorts);
+                if (list.FirstOrDefault(a => a.Abbreviation == "elf") != null)
+                {
+                    // return error level 1 if all pings where closed and 0 if any of them was open
+                    Environment.Exit(reachablePorts > 0 ? 1 : 0);
+                }
+                if (list.FirstOrDefault(a => a.Abbreviation == "elsc") != null)
+                {
+                    // return the amount of opened pings as the error level
+                    Environment.Exit(reachablePorts);
+                }
             }
         }
 
