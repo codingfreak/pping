@@ -8,5 +8,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("pping")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.4.41.*")]
-[assembly: AssemblyFileVersion("1.4.41")]
+[assembly: AssemblyVersion("1.5.43.*")]
+[assembly: AssemblyFileVersion("1.5.43")]
