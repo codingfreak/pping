@@ -2,24 +2,23 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
     using System.Net;
     using System.Reflection;
     using System.Threading;
 
-    using codingfreaks.cfUtils.Logic.Base.Structures;
-    using codingfreaks.cfUtils.Logic.Base.Utilities;
+    using cfUtils.Logic.Base.Structures;
+    using cfUtils.Logic.Base.Utilities;
 
     internal class Program
     {
         #region methods
 
         /// <summary>
-        /// Is used 
+        /// Is used to resolve the command line arguments.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The list of resolved command line arguments.</returns>
         private static List<CommandlineArgumentInfo> GetArguments()
         {
             return new List<CommandlineArgumentInfo>
@@ -48,7 +47,7 @@
                 {
                     Abbreviation = "u",
                     ArgumentName = "udp",
-                    Description = "If set, a UDP ping will be performed.",                    
+                    Description = "If set, a UDP ping will be performed.",
                     IsFlag = true
                 },
                 new CommandlineArgumentInfo
@@ -115,10 +114,17 @@
                 {
                     Abbreviation = "w",
                     ArgumentName = "waittime",
-                    Description = "",
+                    Description = "Defines a time in milliseconds to wait before the first call is made. Defaults to 500.",
                     IsNumeric = true,
                     SampleValue = "3000",
                     DefaultValue = "500"
+                },
+                new CommandlineArgumentInfo
+                {
+                    Abbreviation = "d",
+                    ArgumentName = "details",
+                    Description = "If set, the app will output some more detailled states.",
+                    IsFlag = true
                 }
             };
         }
@@ -144,13 +150,14 @@
             {
                 var list = AppUtil.MapCommandArguments(args, appInfo);
                 var result = 0;
-                string givenValue = null;
+                string givenValue;
                 var ports = new List<int>();
-                var portValue = string.Empty;
-                var timeout = 0;
-                var repeats = 0;
-                var autoStop = false;
-                var useUdp = false;
+                string portValue;
+                int timeout;
+                int repeats;
+                bool autoStop;
+                bool useUdp;
+                bool detailledState;
                 try
                 {
                     givenValue = list.First(a => a.Abbreviation == "a").GivenValue;
@@ -162,11 +169,12 @@
                     else
                     {
                         ports.Add(int.Parse(portValue));
-                    }                    
+                    }
                     timeout = int.Parse(list.First(a => a.Abbreviation == "tim").ResolvedValue);
                     repeats = int.Parse(list.First(a => a.Abbreviation == "r").ResolvedValue);
                     autoStop = list.SingleOrDefault(a => a.Abbreviation == "as") != null;
                     useUdp = list.SingleOrDefault(a => a.Abbreviation == "u") != null;
+                    detailledState = list.SingleOrDefault(a => a.Abbreviation == "d") != null;
                     if (list.SingleOrDefault(a => a.Abbreviation == "t") != null)
                     {
                         repeats = int.MaxValue;
@@ -178,18 +186,23 @@
                     }
                 }
                 catch (Exception ex)
-                {                  
-                    ConsoleUtil.PrintColoredLine($"Error during parsing input parameters: {ex.Message}", ConsoleColor.Red);
+                {
+                    ConsoleUtil.WriteLine($"Error during parsing input parameters: {ex.Message}", ConsoleColor.Red);
                     return;
                 }
                 if (string.IsNullOrEmpty(givenValue) || ports.Any(p => p <= 0))
                 {
                     return;
                 }
-                Console.WriteLine("Starting pinging host {0} on {3} port(s) {1} {2} times:", givenValue, portValue, repeats == int.MaxValue ? "infinite" : repeats.ToString(CultureInfo.InvariantCulture), useUdp ? "UDP" : "TCP");
+                Console.WriteLine(
+                    "Starting pinging host {0} on {3} port(s) {1} {2} times:",
+                    givenValue,
+                    portValue,
+                    repeats == int.MaxValue ? "infinite" : repeats.ToString(CultureInfo.InvariantCulture),
+                    useUdp ? "UDP" : "TCP");
                 var reachablePorts = 0;
                 var closedPorts = 0;
-                var hostIp = "-";                
+                var hostIp = "-";
                 if (list.FirstOrDefault(a => a.Abbreviation == "res") != null)
                 {
                     // we have to perform address resolution                    
@@ -202,9 +215,10 @@
                             {
                                 local0 = Dns.EndGetHostEntry(ar);
                             }
-                            catch 
-                            {                                
-                            }                            
+                            catch
+                            {
+                                // empty catch
+                            }
                             if (local0 == null || !local0.AddressList.Any())
                             {
                                 return;
@@ -216,7 +230,7 @@
                 // start the process
                 var currentPack = 0;
                 for (var i = 0; i < repeats; ++i)
-                {                    
+                {
                     var portOpen = true;
                     ports.ForEach(
                         port =>
@@ -226,13 +240,18 @@
                                 portOpen &= NetworkUtil.IsPortOpened(givenValue, port, timeout, useUdp);
                                 reachablePorts += portOpen ? 1 : 0;
                                 closedPorts += portOpen ? 0 : 1;
+                                var printResult = portOpen ? "OPEN" : "CLOSED";
+                                if (detailledState && !portOpen)
+                                {
+                                    printResult += $" ({NetworkUtil.LastCheckResult.ToString()})";
+                                }
                                 Console.Write("#{0,4} -> Pinging host {1} (IP:{2}) on {5} port {3} with timeout {4}: ", ++currentPack, givenValue, hostIp, port, timeout, useUdp ? "UDP" : "TCP");
-                                ConsoleUtil.PrintColoredLine(portOpen ? "OPEN" : "CLOSED", portOpen ? ConsoleColor.DarkGreen : ConsoleColor.DarkRed);
+                                ConsoleUtil.WriteLine(printResult, portOpen ? ConsoleColor.DarkGreen : ConsoleColor.DarkRed);
                             }
                             catch (Exception ex)
                             {
-                                ConsoleUtil.PrintColoredLine(string.Format("#{0,4} Error pinging host {1}: {2}", ++currentPack, givenValue, ex.Message), ConsoleColor.Red);
-                            }                         
+                                ConsoleUtil.WriteLine($"#{++currentPack,4} Error pinging host {givenValue}: {ex.Message}", ConsoleColor.Red);
+                            }
                         });
                     if (!autoStop || !portOpen)
                     {
