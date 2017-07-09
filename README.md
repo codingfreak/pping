@@ -63,11 +63,11 @@ You perform a permanent pping (`-t`) but you tell pping to stop pinging when the
 
 If you want to check lets say 2 ports (http and https) on a certain address. Just delimit the ports by `,`:
 
-    pping google.com 80,443
+    pping google.com 80,443 -d
 
     Starting pinging host google.com on TCP port(s) 80,443 4 times:
-    #   1 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: CLOSED
-    #   2 -> Pinging host google.com (IP:-) on TCP port 443 with timeout 1: CLOSED
+    #   1 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: CLOSED (TimedOut)
+    #   2 -> Pinging host google.com (IP:-) on TCP port 443 with timeout 1: CLOSED (TimedOut)
     #   3 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: OPEN
     #   4 -> Pinging host google.com (IP:-) on TCP port 443 with timeout 1: OPEN
     #   5 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: OPEN
