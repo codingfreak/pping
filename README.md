@@ -88,9 +88,9 @@ The following table lists all available options:
 | r             | repeats                   | -r=10             | Number of repeats in a non-endless pping (defaults to 4)
 | tim           | timeout                   | -tim=2            | Timeout in seconds (defaults to 1)
 | l             | logo                      | -logo             | If provided, pping will print detailed header informations.
-| res           | resolve                   | -res              | If provided, pping will reolve the IP address for each pping.
+| res           | resolve                   | -res              | If provided, pping will resolve the IP address for each pping.
 | as            | autostop                  | -as               | If provided, pping will stop operation on the first opened port.
 | elsc          | elsucesscount             | -elsc             | If provided, the process will retrieve the amount of opened ports as the process-result to DOS.
 | elf           | elflag                    | -elf              | If provided, the process will return 0 if there was at least one open port, otherwise it returns 1.
 | w             | waittime                  | -w=2000           | The amount of milliseconds to wait between 2 ppings.
-| 
+| d             | details                   | -d                | If provided, pping will try to write reason details at closed ports to te console.
