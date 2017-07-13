@@ -7,6 +7,8 @@
 
     using cfUtils.Logic.Portable.Extensions;
 
+    using GalaSoft.MvvmLight.Command;
+
     /// <summary>
     /// Defines the data for a single pping-Job.
     /// </summary>
@@ -29,7 +31,7 @@
         public JobModel(bool useTcp = true)
         {
             Tcp = useTcp;
-            Udp = !useTcp;
+            Udp = !useTcp;            
         }
 
         #endregion

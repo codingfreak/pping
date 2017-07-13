@@ -10,6 +10,11 @@
         Title="{Binding Title}" Height="600" MinHeight="600" Width="800"
         DataContext="{Binding Main, Source={StaticResource Locator}}" WindowStartupLocation="CenterScreen">
     <Window.Resources>
+        <Style TargetType="Button" x:Key="GridButton">
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Margin" Value="0,4"/>
+        </Style>
         <Style TargetType="StackPanel" x:Key="LinkLabelList">
             <Setter Property="Orientation" Value="Horizontal" />
             <Setter Property="Margin" Value="0,5,0,5" />
@@ -54,6 +59,17 @@
         <Style TargetType="GroupBox">
             <Setter Property="Padding" Value="5" />
         </Style>
+        <Style TargetType="{x:Type DataGridCell}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Window.IsEnabled>
         <Binding Mode="OneWay" Path="IsDataSource" Source="{StaticResource Listener}" />
@@ -87,8 +103,22 @@
                     <DataGrid ItemsSource="{Binding Jobs, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
                               CanUserAddRows="False" AutoGenerateColumns="False" DockPanel.Dock="Bottom"
                               SelectedItem="{Binding CurrentSelectedJob, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              SelectionMode="Single">
+                              SelectionMode="Single" VerticalContentAlignment="Center" GridLinesVisibility="None">
                         <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="40" CanUserResize="False">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding Path=DataContext.StartStopJobCommand, RelativeSource= {RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding Mode=OneWay}" Style="{DynamicResource GridButton}">Start</Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="40" CanUserResize="False" Header="State">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn Binding="{Binding TargetAddess}" Header="Target" />
                             <DataGridTextColumn Binding="{Binding TargetPortsFormatted}" Header="Ports" />
                             <DataGridTextColumn Binding="{Binding NetworkType}" Header="Type" />
@@ -98,6 +128,7 @@
                                 <MenuItem Command="{Binding AddJobCommand}" Header="Add..." />
                                 <MenuItem Command="{Binding RemoveJobCommand}"
                                           CommandParameter="{Binding ElementName=window, Mode=OneWay}" Header="Remove" />
+                                <MenuItem Command="{Binding StartStopJobCommand}" Header="Start" CommandParameter="{Binding CurrentSelectedJob}" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                     </DataGrid>

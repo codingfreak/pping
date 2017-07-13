@@ -3,7 +3,6 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -78,6 +77,17 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                     {
                     }
                 });
+            StartStopJobCommand = new RelayCommand<JobModel>(
+                job =>
+                {
+                    if (job == null)
+                    {
+                        // don't know if this can happen
+                        return;
+                    }
+                    MessageBox.Show(job.TargetAddess);
+                },
+                job => CurrentSelectedJob != null);
         }
 
         /// <inheritdoc />
@@ -100,13 +110,16 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         /// <inheritdoc />
         protected override void InitRuntimeData()
         {
+            Jobs.ListChanged += (s, e) =>
+            {
+                if (CurrentSelectedJob == null)
+                {
+                    CurrentSelectedJob = Jobs.First();
+                }
+            };
             var appName = Assembly.GetExecutingAssembly().GetName().Name;
             Title = appName;
             ReloadOptions();
-            Jobs.ListChanged += (s, e) =>
-            {
-                Trace.TraceInformation(e.ListChangedType.ToString());
-            };
             base.InitRuntimeData();
         }
 
@@ -116,6 +129,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             if (propertyName == nameof(CurrentSelectedJob))
             {
                 RemoveJobCommand.RaiseCanExecuteChanged();
+                StartStopJobCommand.RaiseCanExecuteChanged();
             }
             base.OnInternalPropertyChanged(propertyName);
         }
@@ -178,6 +192,11 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         /// Is used to trigger writing of options back to file system.
         /// </summary>
         public RelayCommand SaveCommand { get; private set; }
+
+        /// <summary>
+        /// Is used to start or stop a single job.
+        /// </summary>
+        public RelayCommand<JobModel> StartStopJobCommand { get; private set; }
 
         /// <summary>
         /// The title of the window.
