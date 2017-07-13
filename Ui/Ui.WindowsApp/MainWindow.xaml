@@ -3,9 +3,79 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Command="http://www.galasoft.ch/mvvmlight"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Title="pping" Height="350" Width="525">
+        Title="{Binding Title}" Height="350" Width="525" DataContext="{Binding Main, Source={StaticResource Locator}}">
+    <Window.Resources>
+        <Style TargetType="StackPanel" x:Key="LinkLabelList">
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="LinkLabel">
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+        <Style x:Key="HyperlinkLikeButton" TargetType="Button">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <TextBlock>
+                            <Hyperlink TextDecorations="{x:Null}">
+                                <Run Text="{TemplateBinding Content}" />
+                            </Hyperlink>
+                        </TextBlock>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <ControlTemplate.Resources>
+                                    <Style TargetType="{x:Type Hyperlink}">
+                                        <Setter Property="TextDecorations" Value="Underline" />
+                                    </Style>
+                                </ControlTemplate.Resources>
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+    </Window.Resources>
+    <Window.IsEnabled>
+        <Binding Mode="OneWay" Path="IsDataSource" Source="{StaticResource Listener}"/>
+    </Window.IsEnabled>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <Command:EventToCommand Command="{Binding Mode=OneWay, Path=ClosingCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
-        
+        <GroupBox Header="Jobs">
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Top" Style="{DynamicResource LinkLabelList}">
+                    <Button Style="{DynamicResource HyperlinkLikeButton}" Content="Add" Command="{Binding AddJobCommand}"/>
+                    <Button Style="{DynamicResource HyperlinkLikeButton}" Content="Remove" Command="{Binding RemoveJobCommand}"/>
+                </StackPanel>
+                <DataGrid ItemsSource="{Binding Jobs}" CanUserAddRows="False" AutoGenerateColumns="False" DockPanel.Dock="Bottom" SelectedItem="{Binding CurrentSelectedJob, Mode=TwoWay}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding TargetAddess}" Header="Target"/>
+                        <DataGridTextColumn Binding="{Binding TargetPortsFormatted}" Header="Ports"/>
+                        <DataGridTextColumn Binding="{Binding NetworkType}" Header="Type"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </GroupBox>
     </Grid>
 </Window>
