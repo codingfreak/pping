@@ -27,15 +27,15 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                 // Create run time view services and models
                 
             }
-            SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<MainViewsModel>();
             SimpleIoc.Default.Register<AddJobViewModel>();
         }
 
-        public MainViewModel Main
+        public MainViewsModel Main
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
+                return ServiceLocator.Current.GetInstance<MainViewsModel>();
             }
         }
 

@@ -6,7 +6,8 @@
     using System.Linq;
     using System.Windows;
 
-    using GalaSoft.MvvmLight;
+    using cfUtils.Logic.Wpf.MvvmLight;
+
     using GalaSoft.MvvmLight.Command;
 
     using Messages;
@@ -14,9 +15,9 @@
     using Models;
 
     /// <summary>
-    /// Defines the logic and data of the <see cref="AddJobWindow"/>.
+    /// Defines the logic and data of the <see cref="AddJobWindow" />.
     /// </summary>
-    public class AddJobViewModel : ViewModelBase
+    public class AddJobViewModel : BaseViewModel
     {
         #region member vars
 
@@ -24,38 +25,9 @@
 
         #endregion
 
-        #region constructors and destructors
-
-        public AddJobViewModel()
-        {
-            if (IsInDesignMode)
-            {
-                // Code runs in Blend --> create design time data.
-                Title = "Add Job (DESIGNER)";
-                FillDesignTimeData();
-            }
-            else
-            {
-                // Code runs "for real"
-                Title = "Add Job";
-                InitCommands();
-            }
-        }
-
-        #endregion
-
         #region methods
 
-        private void FillDesignTimeData()
-        {
-            Data = new JobModel
-            {
-                TargetAddess = "google.de",
-                TargetPorts = new[] { 80, 443 }
-            };
-        }
-
-        private void InitCommands()
+        protected override void InitCommands()
         {
             OkCommand = new RelayCommand<Window>(
                 window =>
@@ -64,6 +36,23 @@
                     window.Close();
                 },
                 window => Data.IsValid);
+        }
+
+        protected override void InitDesignTimeData()
+        {
+            Title = "Add Job (DESIGNER)";
+            Data = new JobModel
+            {
+                TargetAddess = "google.de",
+                TargetPorts = new[] { 80, 443 }
+            };
+            base.InitDesignTimeData();
+        }
+
+        protected override void InitRuntimeData()
+        {
+            Title = "Add Job";
+            base.InitRuntimeData();
         }
 
         #endregion

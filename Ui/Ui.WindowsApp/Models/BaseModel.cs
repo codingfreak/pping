@@ -10,19 +10,22 @@
     /// <summary>
     /// Abstract base class for all models.
     /// </summary>
-    public abstract class BaseModel : INotifyPropertyChanged
+    public abstract class BaseModel : INotifyPropertyChanged, INotifyPropertyChanging
     {
         #region events
 
         /// <inheritdoc />
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <inheritdoc />
+        public event PropertyChangingEventHandler PropertyChanging;
+
         #endregion
 
         #region methods
 
         /// <summary>
-        /// Helper method to fire <see cref="PropertyChanged"/>.
+        /// Helper method to fire <see cref="PropertyChanged" />.
         /// </summary>
         /// <param name="propertyName">The name of the property (is automatically inserted).</param>
         [NotifyPropertyChangedInvocator]

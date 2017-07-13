@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
 
     using cfUtils.Logic.Portable.Extensions;
@@ -11,6 +12,14 @@
     /// </summary>
     public class JobModel : BaseModel
     {
+        #region member vars
+
+        private bool _useTcp;
+
+        private bool _useUdp;
+
+        #endregion
+
         #region constructors and destructors
 
         /// <summary>
@@ -30,11 +39,15 @@
         /// <summary>
         /// Indicates whether the job should stop when the first successful port ping arrived.
         /// </summary>
+        [Category("Behavior")]
+        [DisplayName("Stop on first open")]
+        [Description("Indicates whether the job should stop when the first successful port ping arrived.")]
         public bool AutoStop { get; set; }
 
         /// <summary>
         /// Indicates whether the current definition of the job is consistent.
         /// </summary>
+        [Browsable(false)]
         public bool IsValid => !TargetAddess.IsNullOrEmpty() && TargetPorts.Any() && Tcp != Udp;
 
         /// <summary>
@@ -50,6 +63,7 @@
         /// <summary>
         /// Shows the string representation of the network type used by jobs (TCP or UDP).
         /// </summary>
+        [Browsable(false)]
         public string NetworkType => Tcp ? "TCP" : "UDP";
 
         /// <summary>
@@ -75,12 +89,44 @@
         /// <summary>
         /// Indicates whether TCP should be used.
         /// </summary>
-        public bool Tcp { get; }
+        [Category("Basic")]
+        [DisplayName("Use TCP")]
+        [Description("Indicates whether TCP should be used.")]
+        public bool Tcp
+        {
+            get => _useTcp;
+            set
+            {
+                _useTcp = value;
+                _useUdp = !value;
+                OnPropertyChanged();
+                // ReSharper disable once ExplicitCallerInfoArgument
+                OnPropertyChanged(nameof(Udp));
+                // ReSharper disable once ExplicitCallerInfoArgument
+                OnPropertyChanged(nameof(NetworkType));
+            }
+        }
 
         /// <summary>
         /// Indicates whether UDP should be used.
         /// </summary>
-        public bool Udp { get; }
+        [Category("Basic")]
+        [DisplayName("Use UDP")]
+        [Description("Indicates whether UDP should be used.")]
+        public bool Udp
+        {
+            get => _useUdp;
+            set
+            {
+                _useUdp = value;
+                _useTcp = !value;
+                OnPropertyChanged();
+                // ReSharper disable once ExplicitCallerInfoArgument
+                OnPropertyChanged(nameof(Tcp));
+                // ReSharper disable once ExplicitCallerInfoArgument
+                OnPropertyChanged(nameof(NetworkType));
+            }
+        }
 
         /// <summary>
         /// Defines the pause between 2 ppings.

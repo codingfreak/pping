@@ -6,7 +6,7 @@
     using ViewModel;
 
     /// <summary>
-    /// Is sent by the <see cref="MainViewModel"/> to inform the app to open the <see cref="AddJobWindow"/>.
+    /// Is sent by the <see cref="MainViewsModel"/> to inform the app to open the <see cref="AddJobWindow"/>.
     /// </summary>
     public class AddJobWindowOpenMessage
     {

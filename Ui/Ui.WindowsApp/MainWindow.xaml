@@ -5,15 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Command="http://www.galasoft.ch/mvvmlight"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="450" Width="800" DataContext="{Binding Main, Source={StaticResource Locator}}" WindowStartupLocation="CenterScreen">
+        Title="{Binding Title}" Height="600" MinHeight="600" Width="800"
+        DataContext="{Binding Main, Source={StaticResource Locator}}" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="StackPanel" x:Key="LinkLabelList">
-            <Setter Property="Orientation" Value="Horizontal"/>
-            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="Margin" Value="0,5,0,5" />
         </Style>
         <Style TargetType="TextBlock" x:Key="LinkLabel">
-            <Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="Margin" Value="0,0,5,0" />
         </Style>
         <Style x:Key="HyperlinkLikeButton" TargetType="Button">
             <Setter Property="Focusable" Value="False" />
@@ -28,8 +30,8 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Margin" Value="0,0,5,0"/>
-            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,5,0" />
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="true">
@@ -50,11 +52,11 @@
             </Style.Triggers>
         </Style>
         <Style TargetType="GroupBox">
-            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Padding" Value="5" />
         </Style>
     </Window.Resources>
     <Window.IsEnabled>
-        <Binding Mode="OneWay" Path="IsDataSource" Source="{StaticResource Listener}"/>
+        <Binding Mode="OneWay" Path="IsDataSource" Source="{StaticResource Listener}" />
     </Window.IsEnabled>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
@@ -63,33 +65,53 @@
     </i:Interaction.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" MinWidth="80"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="3*" MinWidth="80"/>
+            <ColumnDefinition Width="2*" MinWidth="80" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="3*" MinWidth="80" />
         </Grid.ColumnDefinitions>
-        <GroupBox Grid.Column="0" Header="Jobs">
-            <DockPanel LastChildFill="True">
-                <StackPanel DockPanel.Dock="Top" Style="{DynamicResource LinkLabelList}">
-                    <Button Style="{DynamicResource HyperlinkLikeButton}" Content="Add" Command="{Binding AddJobCommand}"/>
-                    <Button Style="{DynamicResource HyperlinkLikeButton}" Content="Remove" Command="{Binding RemoveJobCommand}" CommandParameter="{Binding ElementName=window, Mode=OneWay}"/>
-                </StackPanel>
-                <DataGrid ItemsSource="{Binding Jobs}" CanUserAddRows="False" AutoGenerateColumns="False" DockPanel.Dock="Bottom" SelectedItem="{Binding CurrentSelectedJob, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding TargetAddess}" Header="Target"/>
-                        <DataGridTextColumn Binding="{Binding TargetPortsFormatted}" Header="Ports"/>
-                        <DataGridTextColumn Binding="{Binding NetworkType}" Header="Type"/>
-                    </DataGrid.Columns>
-                    <DataGrid.ContextMenu>
-                        <ContextMenu x:Name="gridMenu">
-                            <MenuItem Command="{Binding AddJobCommand}" Header="Add..." />
-                            <MenuItem Command="{Binding RemoveJobCommand}" CommandParameter="{Binding ElementName=window, Mode=OneWay}" Header="Remove"/>
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                </DataGrid>
-            </DockPanel>
-        </GroupBox>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition MinHeight="200" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" Name="propertyRow" />
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0" Header="Jobs">
+                <DockPanel LastChildFill="True">
+                    <StackPanel DockPanel.Dock="Top" Style="{DynamicResource LinkLabelList}">
+                        <Button Style="{DynamicResource HyperlinkLikeButton}" Content="Add"
+                                Command="{Binding AddJobCommand}" />
+                        <Button Style="{DynamicResource HyperlinkLikeButton}" Content="Remove"
+                                Command="{Binding RemoveJobCommand}"
+                                CommandParameter="{Binding ElementName=window, Mode=OneWay}" />
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding Jobs, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                              CanUserAddRows="False" AutoGenerateColumns="False" DockPanel.Dock="Bottom"
+                              SelectedItem="{Binding CurrentSelectedJob, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding TargetAddess}" Header="Target" />
+                            <DataGridTextColumn Binding="{Binding TargetPortsFormatted}" Header="Ports" />
+                            <DataGridTextColumn Binding="{Binding NetworkType}" Header="Type" />
+                        </DataGrid.Columns>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu x:Name="gridMenu">
+                                <MenuItem Command="{Binding AddJobCommand}" Header="Add..." />
+                                <MenuItem Command="{Binding RemoveJobCommand}"
+                                          CommandParameter="{Binding ElementName=window, Mode=OneWay}" Header="Remove" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                    </DataGrid>
+                </DockPanel>
+            </GroupBox>
+            <GridSplitter Grid.Row="1" Height="3" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch"
+                          ResizeDirection="Rows" IsEnabled="{Binding IsExpanded, ElementName=expander}" />
+            <Expander x:Name="expander" Grid.Row="2" Header="Job-Definition" Collapsed="OnExpanderCollapsed"
+                      Expanded="OnExpanderExpanded" ExpandDirection="Up" IsExpanded="True">
+                <xctk:PropertyGrid SelectedObject="{Binding CurrentSelectedJob}" IsManipulationEnabled="True"
+                                   ShowSearchBox="False" ShowTitle="False" ShowSortOptions="False" />
+            </Expander>
+        </Grid>
         <GridSplitter Grid.Column="1" Width="3" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns" />
-        <GroupBox Grid.Column="2" Header="Details">
-        </GroupBox>
+        <GroupBox Grid.Column="2" Header="Details" />
     </Grid>
 </Window>
