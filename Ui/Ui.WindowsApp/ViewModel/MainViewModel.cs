@@ -19,7 +19,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
     using Newtonsoft.Json;
 
     /// <summary>
-    /// ViewModel for the main view.
+    /// Defines logic and data for the <see cref="MainWindow"/>.
     /// </summary>
     public class MainViewModel : ViewModelBase
     {

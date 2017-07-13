@@ -1,15 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace codingfreaks.pping.Ui.WindowsApp.Models
+﻿namespace codingfreaks.pping.Ui.WindowsApp.Models
 {
-    public class OptionsModel
-    {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
+    /// <summary>
+    /// Defines the model to store and retrieve all options from the data sink.
+    /// </summary>
+    public class OptionsModel : BaseModel
+    {
+        #region properties
+
+        /// <summary>
+        /// The list of job definitions.
+        /// </summary>
         public IEnumerable<JobModel> JobDefinitions { get; set; }
 
+        #endregion
     }
 }

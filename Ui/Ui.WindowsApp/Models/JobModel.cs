@@ -2,15 +2,21 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
 
     using cfUtils.Logic.Portable.Extensions;
 
+    /// <summary>
+    /// Defines the data for a single pping-Job.
+    /// </summary>
     public class JobModel : BaseModel
     {
         #region constructors and destructors
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="useTcp"><c>true</c> if TCP should be used otherwise <c>false</c> for UDP.</param>
         public JobModel(bool useTcp = true)
         {
             Tcp = useTcp;
@@ -21,65 +27,68 @@
 
         #region properties
 
+        /// <summary>
+        /// Indicates whether the job should stop when the first successful port ping arrived.
+        /// </summary>
         public bool AutoStop { get; set; }
 
-        public DateTimeOffset? Finished { get; set; }
-
+        /// <summary>
+        /// Indicates whether the current definition of the job is consistent.
+        /// </summary>
         public bool IsValid => !TargetAddess.IsNullOrEmpty() && TargetPorts.Any() && Tcp != Udp;
 
+        /// <summary>
+        /// Defines an optional maximum rutime for jobs of this definition.
+        /// </summary>
         public TimeSpan? MaxRuntime { get; set; }
 
+        /// <summary>
+        /// Defines an optional maximum amount of pping operations of this definition.
+        /// </summary>
         public int? MaxTries { get; set; }
 
+        /// <summary>
+        /// Shows the string representation of the network type used by jobs (TCP or UDP).
+        /// </summary>
         public string NetworkType => Tcp ? "TCP" : "UDP";
 
-        public DateTimeOffset PlannedStart { get; set; }
+        /// <summary>
+        /// Defines an optional fixed time to start the pping.
+        /// </summary>
+        public DateTimeOffset? PlannedStart { get; set; }
 
-        public DateTimeOffset? Started { get; set; }
-
+        /// <summary>
+        /// The target host name or IP address to use.
+        /// </summary>
         public string TargetAddess { get; set; }
 
+        /// <summary>
+        /// The list of ports to check on the <see cref="TargetAddess" />.
+        /// </summary>
         public IEnumerable<int> TargetPorts { get; set; } = Enumerable.Empty<int>();
 
-        public string TargetPortsFormatted
-        {
-            get => string.Join(",", TargetPorts ?? Enumerable.Empty<int>());
-            set
-            {
-                if (value.IsNullOrEmpty())
-                {
-                    TargetPorts = Enumerable.Empty<int>();
-                }
-                try
-                {
-                    var result = new List<int>();
-                    var parts = value.Split(',');
-                    if (parts.Any())
-                    {
-                        foreach (var part in parts)
-                        {
-                            if (int.TryParse(part, NumberStyles.Integer, CultureInfo.CurrentUICulture, out var parsed))
-                            {
-                                result.Add(parsed);
-                            }
-                            else
-                            {
-                                return;
-                            }
-                        }
-                    }
-                    TargetPorts = result;
-                }
-                catch
-                {
-                    // empty catch                    
-                }
-            }
-        }
+        /// <summary>
+        /// The readable version of <see cref="TargetPorts" />.
+        /// </summary>
+        public string TargetPortsFormatted => string.Join(",", TargetPorts ?? Enumerable.Empty<int>());
 
+        /// <summary>
+        /// Indicates whether TCP should be used.
+        /// </summary>
         public bool Tcp { get; }
 
+        /// <summary>
+        /// Indicates whether UDP should be used.
+        /// </summary>
         public bool Udp { get; }
+
+        /// <summary>
+        /// Defines the pause between 2 ppings.
+        /// </summary>
+        /// <remarks>
+        /// Defaults to 10 seconds.
+        /// </remarks>
+        public TimeSpan WaitTime { get; set; } = TimeSpan.FromSeconds(10);
 
         #endregion
     }

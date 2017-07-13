@@ -13,6 +13,9 @@
 
     using Models;
 
+    /// <summary>
+    /// Defines the logic and data of the <see cref="AddJobWindow"/>.
+    /// </summary>
     public class AddJobViewModel : ViewModelBase
     {
         #region member vars

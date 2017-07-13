@@ -10,6 +10,9 @@
 
     using ViewModel;
 
+    /// <summary>
+    /// Is used to hook into the message bus.
+    /// </summary>
     public class MessageListener
     {
         #region member vars
@@ -34,12 +37,7 @@
                 m =>
                 {
                     var window = GetWindow(typeof(MainWindow));
-                    if (window == null)
-                    {
-                        // strange
-                        return;
-                    }
-                    var ctx = window.DataContext as MainViewModel;
+                    var ctx = window?.DataContext as MainViewModel;
                     if (ctx == null)
                     {
                         // strange too
@@ -53,6 +51,11 @@
 
         #region methods
 
+        /// <summary>
+        /// Retrieves one of the currently opened windows by searching for its <paramref name="type"/>.
+        /// </summary>
+        /// <param name="type">The type of the window.</param>
+        /// <returns>The window instance or <c>null</c> if no matching window was found.</returns>
         private Window GetWindow(Type type)
         {
             foreach (var window in Application.Current.Windows)

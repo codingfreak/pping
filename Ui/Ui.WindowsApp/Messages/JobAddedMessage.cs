@@ -5,6 +5,11 @@
 
     using Models;
 
+    using ViewModel;
+
+    /// <summary>
+    /// Is sent by the <see cref="AddJobViewModel"/> to inform the app to add a new job.
+    /// </summary>
     public class JobAddedMessage
     {
         #region constructors and destructors
@@ -18,6 +23,9 @@
 
         #region properties
 
+        /// <summary>
+        /// The data of the job definition.
+        /// </summary>
         public JobModel NewJob { get; }
 
         #endregion
