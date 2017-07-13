@@ -91,8 +91,11 @@
     </Compile>
     <Compile Include="MessageListener.cs" />
     <Compile Include="Messages\AddJobWindowOpenMessage.cs" />
+    <Compile Include="Messages\JobAddedMessage.cs" />
+    <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\JobModel.cs" />
     <Compile Include="Models\OptionsModel.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\AddJobViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />

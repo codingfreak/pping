@@ -39,6 +39,13 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                 Title = appName;
                 InitCommands();
                 ReloadOptions();
+                PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(CurrentSelectedJob))
+                    {
+                        RemoveJobCommand.RaiseCanExecuteChanged();                        
+                    }
+                };
             }
         }
 
@@ -83,7 +90,15 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                 {
                     MessengerInstance.Send(new AddJobWindowOpenMessage());
                 });
-            RemoveJobCommand = new RelayCommand(() => { }, () => CurrentSelectedJob != null);
+            RemoveJobCommand = new RelayCommand<Window>(
+                window =>
+                {
+                    if (MessageBox.Show(window, "Do you want to delete the job?", "Delete job", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        Jobs.Remove(CurrentSelectedJob);
+                        CurrentSelectedJob = null;                        
+                    }
+                }, window => CurrentSelectedJob != null);
             ClosingCommand = new RelayCommand(
                 () =>
                 {
@@ -114,7 +129,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
 
         public RelayCommand AddJobCommand { get; private set; }
 
-        public RelayCommand RemoveJobCommand { get; private set; }
+        public RelayCommand<Window> RemoveJobCommand { get; private set; }
 
         public RelayCommand SaveCommand { get; private set; }
 
@@ -122,6 +137,10 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
 
         private readonly string OptionsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "options.json");
 
-        public JobModel CurrentSelectedJob { get; set; }
+        public JobModel CurrentSelectedJob
+        {
+            get;
+            set;
+        }
     }
 }
