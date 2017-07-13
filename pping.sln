@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ui", "Ui", "{9A9CD6D3-5087-4AA9-9F92-28D4972BE00D}"
 EndProject
@@ -12,31 +11,58 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".shared", ".shared", "{9451
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ui.ConsoleApp", "Ui\Ui.ConsoleApp\Ui.ConsoleApp.csproj", "{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ui.WindowsApp", "Ui\Ui.WindowsApp\Ui.WindowsApp.csproj", "{3D0DC37B-BA95-47EC-8C79-721584E46A7C}"
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 2
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://sab-team.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Ui\\Ui.ConsoleApp\\Ui.ConsoleApp.csproj
-		SccProjectTopLevelParentUniqueName1 = pping.sln
-		SccProjectName1 = Ui/Ui.ConsoleApp
-		SccLocalPath1 = Ui\\Ui.ConsoleApp
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Debug|ARM.Build.0 = Debug|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Debug|x64.Build.0 = Debug|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Debug|x86.Build.0 = Debug|Any CPU
 		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Release|ARM.Build.0 = Release|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Release|x64.ActiveCfg = Release|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Release|x64.Build.0 = Release|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Release|x86.ActiveCfg = Release|Any CPU
+		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB}.Release|x86.Build.0 = Release|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Debug|ARM.Build.0 = Debug|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Debug|x64.Build.0 = Debug|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Debug|x86.Build.0 = Debug|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Release|ARM.Build.0 = Release|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Release|x64.ActiveCfg = Release|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Release|x64.Build.0 = Release|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Release|x86.ActiveCfg = Release|Any CPU
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CCA1DA02-9805-4274-AA59-F1F1F41C43CB} = {9A9CD6D3-5087-4AA9-9F92-28D4972BE00D}
+		{3D0DC37B-BA95-47EC-8C79-721584E46A7C} = {9A9CD6D3-5087-4AA9-9F92-28D4972BE00D}
 	EndGlobalSection
 EndGlobal
