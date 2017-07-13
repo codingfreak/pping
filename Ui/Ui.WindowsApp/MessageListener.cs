@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Windows;
 
     using GalaSoft.MvvmLight.Messaging;
@@ -29,7 +30,10 @@
                 this,
                 m =>
                 {
-                    var form = new AddJobWindow();
+                    var form = new AddJobWindow
+                    {
+                        Owner = GetWindow(typeof(MainWindow))
+                    };
                     form.ShowDialog();
                 });
             Messenger.Default.Register<JobAddedMessage>(
