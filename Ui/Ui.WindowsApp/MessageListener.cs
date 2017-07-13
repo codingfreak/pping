@@ -60,7 +60,7 @@
         /// </summary>
         /// <param name="type">The type of the window.</param>
         /// <returns>The window instance or <c>null</c> if no matching window was found.</returns>
-        private Window GetWindow(Type type)
+        public static Window GetWindow(Type type)
         {
             foreach (var window in Application.Current.Windows)
             {

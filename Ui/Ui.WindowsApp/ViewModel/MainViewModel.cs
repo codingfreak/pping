@@ -93,7 +93,11 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             RemoveJobCommand = new RelayCommand<Window>(
                 window =>
                 {
-                    if (MessageBox.Show(window, "Do you want to delete the job?", "Delete job", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    if (window == null)
+                    {
+                        window = MessageListener.GetWindow(typeof(MainWindow));
+                    }
+                    if (MessageBox.Show(window, "Do you want to delete the job?", "Delete job", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                     {
                         Jobs.Remove(CurrentSelectedJob);
                         CurrentSelectedJob = null;                        

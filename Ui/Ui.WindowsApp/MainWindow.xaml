@@ -6,7 +6,7 @@
         xmlns:Command="http://www.galasoft.ch/mvvmlight"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="350" Width="525" DataContext="{Binding Main, Source={StaticResource Locator}}">
+        Title="{Binding Title}" Height="450" Width="800" DataContext="{Binding Main, Source={StaticResource Locator}}" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="StackPanel" x:Key="LinkLabelList">
             <Setter Property="Orientation" Value="Horizontal"/>
@@ -62,7 +62,12 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
-        <GroupBox Header="Jobs">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" MinWidth="80"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="3*" MinWidth="80"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Column="0" Header="Jobs">
             <DockPanel LastChildFill="True">
                 <StackPanel DockPanel.Dock="Top" Style="{DynamicResource LinkLabelList}">
                     <Button Style="{DynamicResource HyperlinkLikeButton}" Content="Add" Command="{Binding AddJobCommand}"/>
@@ -74,8 +79,17 @@
                         <DataGridTextColumn Binding="{Binding TargetPortsFormatted}" Header="Ports"/>
                         <DataGridTextColumn Binding="{Binding NetworkType}" Header="Type"/>
                     </DataGrid.Columns>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu x:Name="gridMenu">
+                            <MenuItem Command="{Binding AddJobCommand}" Header="Add..." />
+                            <MenuItem Command="{Binding RemoveJobCommand}" CommandParameter="{Binding ElementName=window, Mode=OneWay}" Header="Remove"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                 </DataGrid>
             </DockPanel>
+        </GroupBox>
+        <GridSplitter Grid.Column="1" Width="3" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns" />
+        <GroupBox Grid.Column="2" Header="Details">
         </GroupBox>
     </Grid>
 </Window>
