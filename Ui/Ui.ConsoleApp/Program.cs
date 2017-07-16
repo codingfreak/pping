@@ -269,7 +269,7 @@
                 if (list.FirstOrDefault(a => a.Abbreviation == "elf") != null)
                 {
                     // return error level 1 if all pings where closed and 0 if any of them was open
-                    Environment.Exit(reachablePorts > 0 ? 1 : 0);
+                    Environment.Exit(reachablePorts > 0 ? 0 : 1);
                 }
                 if (list.FirstOrDefault(a => a.Abbreviation == "elsc") != null)
                 {

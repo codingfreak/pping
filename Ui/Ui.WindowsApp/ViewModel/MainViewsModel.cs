@@ -6,11 +6,16 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Threading.Tasks;
     using System.Windows;
 
     using cfUtils.Logic.Wpf.MvvmLight;
 
+    using Enumerations;
+
     using GalaSoft.MvvmLight.Command;
+
+    using Logic;
 
     using Messages;
 
@@ -59,6 +64,15 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             ClosingCommand = new RelayCommand(
                 () =>
                 {
+                    while (Jobs.Any(j => j.CurrentJob != null && j.CurrentJob.State == JobStateEnum.Stopping))
+                    {
+                        Task.Delay(100).Wait();
+                    }
+                    Jobs.Where(j => j.CurrentJob != null && !j.CurrentJob.Finished.HasValue).ToList().ForEach(
+                        j =>
+                        {
+                            j.CurrentJob.Stop();                        
+                        });                    
                     SaveCommand.Execute(null);
                 });
             SaveCommand = new RelayCommand(
@@ -78,14 +92,19 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                     }
                 });
             StartStopJobCommand = new RelayCommand<JobModel>(
-                job =>
+                jobDef =>
                 {
-                    if (job == null)
+                    if (jobDef == null)
                     {
                         // don't know if this can happen
                         return;
                     }
-                    MessageBox.Show(job.TargetAddess);
+                    if (jobDef.IsBusy)
+                    {
+                        jobDef.CurrentJob.Stop();
+                        return;
+                    }
+                    jobDef.StartNew();
                 },
                 job => CurrentSelectedJob != null);
         }
@@ -133,7 +152,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             }
             base.OnInternalPropertyChanged(propertyName);
         }
-
+        
         /// <summary>
         /// Loads the options from the local file storage.
         /// </summary>

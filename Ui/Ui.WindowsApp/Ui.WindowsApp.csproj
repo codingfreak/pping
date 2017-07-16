@@ -114,17 +114,29 @@
     <Compile Include="AddJobWindow.xaml.cs">
       <DependentUpon>AddJobWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\StateDisplayControl.xaml.cs">
+      <DependentUpon>StateDisplayControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Enumerations\JobStateEnum.cs" />
+    <Compile Include="EventArguments\JobResultEventArgs.cs" />
+    <Compile Include="Logic\PingJob.cs" />
     <Compile Include="MessageListener.cs" />
     <Compile Include="Messages\AddJobWindowOpenMessage.cs" />
     <Compile Include="Messages\JobAddedMessage.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\JobModel.cs" />
+    <Compile Include="Models\JobResultModel.cs" />
+    <Compile Include="Models\JobSingleRunModel.cs" />
     <Compile Include="Models\OptionsModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\AddJobViewModel.cs" />
     <Compile Include="ViewModel\MainViewsModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="AddJobWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\StateDisplayControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
