@@ -4,12 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:codingfreaks.pping.Ui.WindowsApp"
-        mc:Ignorable="d"        
-        Title="{Binding Title}" Height="300" Width="549.303" DataContext="{Binding AddJob, Source={StaticResource Locator}}" WindowStartupLocation="CenterOwner">
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="300" Width="549.303"
+        DataContext="{Binding AddJob, Source={StaticResource Locator}}" WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="false">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -17,19 +19,23 @@
         </Grid.RowDefinitions>
         <!-- left grid -->
         <StackPanel Grid.Column="0" Grid.Row="0">
-            <Label Content="Address"></Label>
-            <TextBox Text="{Binding Data.TargetAddess, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            <Label Content="Ports (serparte multiple ports by comma)"></Label>
-            <TextBox Text="{Binding TargetPorts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <Label Content="Address" />
+            <TextBox Text="{Binding Data.TargetAddess, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <Label Content="Ports (serparte multiple ports by comma)" />
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Content="..." Width="30" Command="{Binding ShowPortSelectCommand}" Padding="0" Margin="0" />
+                <TextBox DockPanel.Dock="Left"
+                         Text="{Binding TargetPorts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </DockPanel>
         </StackPanel>
         <!-- right grid -->
-        <StackPanel Grid.Column="1" Grid.Row="0">
-
-        </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="0" />
         <!-- bottom row -->
-        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="2"  Grid.Row="1" HorizontalAlignment="Right">
-            <Button Content="OK" IsDefault="True" Command="{Binding OkCommand, Mode=OneWay}" CommandParameter="{Binding ElementName=window, Mode=OneWay}"></Button>
-            <Button Content="Cancel" IsCancel="True"></Button>
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
+                    HorizontalAlignment="Right">
+            <Button Content="OK" IsDefault="True" Command="{Binding OkCommand, Mode=OneWay}"
+                    CommandParameter="{Binding ElementName=window, Mode=OneWay}" />
+            <Button Content="Cancel" IsCancel="True" />
         </StackPanel>
     </Grid>
 </Window>

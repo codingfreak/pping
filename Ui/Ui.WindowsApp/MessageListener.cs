@@ -6,6 +6,8 @@
 
     using GalaSoft.MvvmLight.Messaging;
 
+    using Logic;
+
     using Messages;
 
     using ViewModel;
@@ -48,6 +50,22 @@
                     }
                     ctx.Jobs.Add(m.NewJob);
                 });
+            Messenger.Default.Register<ShowPortWindowMessage>(
+                this,
+                m =>
+                {
+                    var form = new AddPortWindow
+                    {
+                        Owner = GetWindow(m.ViewModelType)
+                    };
+                    form.Closed += (s, e) =>
+                    {
+                        Variables.AddPortWindow = null;
+                        Messenger.Default.Send(new PortWindowClosedMessage());
+                    };
+                    Variables.AddPortWindow = form;
+                    form.ShowDialog();                    
+                });
         }
 
         #endregion
@@ -58,14 +76,25 @@
         /// Retrieves one of the currently opened windows by searching for its <paramref name="type" />.
         /// </summary>
         /// <param name="type">The type of the window.</param>
+        /// <param name="searchForViewModel">If <c>true</c> the <paramref name="type" /> will be treated as the view model type.</param>
         /// <returns>The window instance or <c>null</c> if no matching window was found.</returns>
-        public static Window GetWindow(Type type)
+        public static Window GetWindow(Type type, bool searchForViewModel = false)
         {
-            foreach (var window in Application.Current.Windows)
+            foreach (Window window in Application.Current.Windows)
             {
-                if (window.GetType() == type)
+                if (searchForViewModel)
                 {
-                    return window as Window;
+                    if (window.DataContext.GetType() == type)
+                    {
+                        return window;
+                    }
+                }
+                else
+                {
+                    if (window.GetType() == type)
+                    {
+                        return window;
+                    }
                 }
             }
             return null;

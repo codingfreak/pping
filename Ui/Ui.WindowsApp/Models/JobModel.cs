@@ -78,7 +78,7 @@
             // ReSharper disable once ExplicitCallerInfoArgument 
             OnPropertyChanged(nameof(StateText));
             // ReSharper disable once ExplicitCallerInfoArgument 
-            OnPropertyChanged(nameof(State));
+            OnPropertyChanged(nameof(State));            
         }
 
         #endregion

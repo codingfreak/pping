@@ -121,6 +121,11 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                     {
                         TargetAddess = "google.de",
                         TargetPorts = new[] { 80, 443 }
+                    },
+                    new JobModel
+                    {
+                        TargetAddess = "localhost",
+                        TargetPorts = new[] { 3389 }
                     }
                 });
             base.InitDesignTimeData();
@@ -147,8 +152,13 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         {
             if (propertyName == nameof(CurrentSelectedJob))
             {
+                Variables.CurrentSelectedJob = CurrentSelectedJob;
                 RemoveJobCommand.RaiseCanExecuteChanged();
                 StartStopJobCommand.RaiseCanExecuteChanged();
+                if (CurrentSelectedJob == null && Jobs.Any())
+                {
+                    CurrentSelectedJob = Jobs.First();
+                }
             }
             base.OnInternalPropertyChanged(propertyName);
         }

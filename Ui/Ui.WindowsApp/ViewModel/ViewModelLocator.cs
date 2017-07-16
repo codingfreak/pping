@@ -29,6 +29,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             }
             SimpleIoc.Default.Register<MainViewsModel>();
             SimpleIoc.Default.Register<AddJobViewModel>();
+            SimpleIoc.Default.Register<AddPortViewModel>();
         }
 
         public MainViewsModel Main
@@ -46,6 +47,15 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                 return ServiceLocator.Current.GetInstance<AddJobViewModel>();
             }
         }
+
+        public AddPortViewModel AddPort
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<AddPortViewModel>();
+            }
+        }
+
 
         public static void Cleanup()
         {

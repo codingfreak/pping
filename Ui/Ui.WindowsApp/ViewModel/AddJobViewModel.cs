@@ -6,9 +6,12 @@
     using System.Linq;
     using System.Windows;
 
+    using cfUtils.Logic.Portable.Extensions;
     using cfUtils.Logic.Wpf.MvvmLight;
 
     using GalaSoft.MvvmLight.Command;
+
+    using Logic;
 
     using Messages;
 
@@ -27,6 +30,7 @@
 
         #region methods
 
+        /// <inheritdoc />
         protected override void InitCommands()
         {
             OkCommand = new RelayCommand<Window>(
@@ -36,8 +40,16 @@
                     window.Close();
                 },
                 window => Data.IsValid);
+            ShowPortSelectCommand = new RelayCommand(
+                () =>
+                {
+                    MessengerInstance.Send(new ShowPortWindowMessage(GetType()));
+                },
+                () => Variables.AddPortWindow == null);
         }
+        
 
+        /// <inheritdoc />
         protected override void InitDesignTimeData()
         {
             Title = "Add Job (DESIGNER)";
@@ -49,9 +61,35 @@
             base.InitDesignTimeData();
         }
 
+        /// <inheritdoc />
+        protected override void InitMessenger()
+        {
+            MessengerInstance.Register<PortWindowClosedMessage>(
+                this,
+                m =>
+                {
+                    ShowPortSelectCommand.RaiseCanExecuteChanged();
+                });
+            MessengerInstance.Register<PortAddInvokedMessage>(
+                this,
+                m =>
+                {
+                    var ports = TargetPorts.IsNullOrEmpty() ? Enumerable.Empty<int>() : TargetPorts.Split(',').Select(p => int.Parse(p));
+                    if (ports.Contains(m.PortModel.Port))
+                    {
+                        return;
+                    }
+                    TargetPorts += (TargetPorts.IsNullOrEmpty() || TargetPorts.EndsWith(",") ? string.Empty : ",") + m.PortModel.Port.ToString();
+                    OkCommand.RaiseCanExecuteChanged();
+                });
+            base.InitMessenger();
+        }
+
         protected override void InitRuntimeData()
         {
             Title = "Add Job";
+            Data = new JobModel();
+            Variables.CurrentSelectedJob = Data;
             base.InitRuntimeData();
         }
 
@@ -59,9 +97,11 @@
 
         #region properties
 
-        public JobModel Data { get; set; } = new JobModel();
+        public JobModel Data { get; private set; } 
 
         public RelayCommand<Window> OkCommand { get; private set; }
+
+        public RelayCommand ShowPortSelectCommand { get; private set; }
 
         public string TargetPorts
         {
