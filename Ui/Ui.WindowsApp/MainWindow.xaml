@@ -74,6 +74,28 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="DataGridCell" x:Key="RightColumn">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Right" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="DataGridCell" x:Key="CenterColumn">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Window.DataContext>
         <Binding Path="Main" Source="{StaticResource Locator}" />
@@ -110,8 +132,8 @@
                     <DataGrid
                         ItemsSource="{Binding Jobs, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
                         CanUserAddRows="False" AutoGenerateColumns="False" DockPanel.Dock="Bottom"
-                        SelectedItem="{Binding CurrentSelectedJob, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        SelectionMode="Single" VerticalContentAlignment="Center" GridLinesVisibility="None">
+                        SelectedItem="{Binding CurrentSelectedJobDefintion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        SelectionMode="Single" VerticalContentAlignment="Center" GridLinesVisibility="None" IsReadOnly="True">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Width="40" CanUserResize="False">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -139,8 +161,10 @@
                                 <MenuItem Command="{Binding AddJobCommand}" Header="Add..." />
                                 <MenuItem Command="{Binding RemoveJobCommand}"
                                           CommandParameter="{Binding ElementName=window, Mode=OneWay}" Header="Remove" />
-                                <MenuItem Command="{Binding StartStopJobCommand}" Header="{Binding CurrentSelectedJob.StartStopCaption, Mode=OneWay}"
-                                          CommandParameter="{Binding CurrentSelectedJob}" />
+                                <MenuItem Command="{Binding StartStopJobCommand}" Header="{Binding CurrentSelectedJobDefintion.StartStopCaption, Mode=OneWay}"
+                                          CommandParameter="{Binding CurrentSelectedJobDefintion}" />
+                                <MenuItem Command="{Binding CleanJobHistoryCommand}" Header="Clean History"
+                                          CommandParameter="{Binding CurrentSelectedJobDefintion}" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                     </DataGrid>
@@ -149,13 +173,48 @@
             <GridSplitter Grid.Row="1" Height="3" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch"
                           ResizeDirection="Rows" IsEnabled="{Binding IsExpanded, ElementName=expander}" />
 
-            <xctk:PropertyGrid Grid.Row="2" SelectedObject="{Binding CurrentSelectedJob}"
-                                IsEnabled="{Binding CurrentSelectedJob.IsBusy, Converter={StaticResource InverseBoolConverter}, Mode=OneWay}"
+            <xctk:PropertyGrid Grid.Row="2" SelectedObject="{Binding CurrentSelectedJobDefintion}"
+                                IsEnabled="{Binding CurrentSelectedJobDefintion.IsBusy, Converter={StaticResource InverseBoolConverter}, Mode=OneWay}"
                                 ShowSearchBox="False" ShowTitle="False" ShowSortOptions="False" ScrollViewer.VerticalScrollBarVisibility="Auto" />
         </Grid>
         <GridSplitter Grid.Column="1" Width="3" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns" />
-        <GroupBox Grid.Column="2" Header="Details">
-            <DataGrid ItemsSource="{Binding CurrentSelectedJob.Jobs}"></DataGrid>
-        </GroupBox>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="3"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0" Header="Details">
+                <DataGrid
+                    ItemsSource="{Binding CurrentSelectedJobDefintion.Jobs, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedItem="{Binding CurrentSelectedPingJob}"
+                    CanUserAddRows="False" AutoGenerateColumns="False" DockPanel.Dock="Bottom"                
+                    SelectionMode="Single" VerticalContentAlignment="Center" GridLinesVisibility="None" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding State}" Header="State" />
+                        <DataGridTextColumn Binding="{Binding StartedFormatted}" Header="Started" />
+                        <DataGridTextColumn Binding="{Binding FinishedFormatted}" Header="Finished" />
+                        <DataGridTextColumn Binding="{Binding Result.Runs.Count}" Header="Results" CellStyle="{StaticResource RightColumn}"/>
+                        <DataGridTextColumn Binding="{Binding Result.Opened}" Header="Open Ports" CellStyle="{StaticResource RightColumn}" />
+                        <DataGridTextColumn Binding="{Binding Result.Closed}" Header="Closed Ports" CellStyle="{StaticResource RightColumn}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+            <GridSplitter Grid.Row="1" Height="3" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch"
+                          ResizeDirection="Rows" IsEnabled="{Binding IsExpanded, ElementName=expander}" />
+            <GroupBox Grid.Row="2" Header="Results">
+                <DataGrid
+                    ItemsSource="{Binding CurrentSelectedPingJob.Result.Runs, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"                    
+                    CanUserAddRows="False" AutoGenerateColumns="False" DockPanel.Dock="Bottom"                
+                    SelectionMode="Single" VerticalContentAlignment="Center" GridLinesVisibility="None" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Port}" Header="Port" />
+                        <DataGridTextColumn Binding="{Binding PortPurpose}" Header="Purpose" />
+                        <DataGridCheckBoxColumn Binding="{Binding PortReached}" Header="Open" CellStyle="{StaticResource CenterColumn}" />
+                        <DataGridTextColumn Binding="{Binding TimestampFormatted}" Header="Timestamp" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
     </Grid>
 </Window>

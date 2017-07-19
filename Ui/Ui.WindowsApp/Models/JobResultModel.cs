@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
 
     using Newtonsoft.Json;
@@ -15,9 +16,9 @@
 
         [JsonIgnore]
         public int Opened => Runs.Count(r => r.PortReached);
-
-        public List<JobSingleRunModel> Runs { get; } = new List<JobSingleRunModel>();
-
+       
+        public BindingList<JobSingleRunModel> Runs { get; set; } = new BindingList<JobSingleRunModel>();
+       
         #endregion
     }
 }

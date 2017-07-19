@@ -1,16 +1,20 @@
 ﻿namespace codingfreaks.pping.Ui.WindowsApp.Logic
 {
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Windows.Threading;
 
     using cfUtils.Logic.Base.Utilities;
 
     using Enumerations;
 
     using EventArguments;
+
+    using GalaSoft.MvvmLight.Threading;
 
     using Models;
 
@@ -46,6 +50,9 @@
         {
             JobDefinition = jobDefinition;
             State = JobStateEnum.Defined;
+            Result = new JobResultModel();
+            // ReSharper disable once ExplicitCallerInfoArgument
+            //Result.Runs.ListChanged += (s, e) => OnPropertyChanged(nameof(Result));
         }
 
         #endregion
@@ -109,33 +116,36 @@
                         {
                             var runResult = new JobSingleRunModel
                             {
+                                Tcp = JobDefinition.Tcp,
+                                Udp = JobDefinition.Udp,
                                 Port = port
                             };
                             runResult.PortReached = NetworkUtil.IsPortOpened(JobDefinition.TargetAddess, port, (int)JobDefinition.Timeout.TotalSeconds, JobDefinition.Udp);
                             if (JobDefinition.ResolveAddress)
                             {
+                                // job should try to resolve ip address
                                 Dns.BeginGetHostEntry(
                                     JobDefinition.TargetAddess,
                                     ar =>
                                     {
-                                        IPHostEntry local0 = null;
+                                        IPHostEntry firstNetworkAddress = null;
                                         try
                                         {
-                                            local0 = Dns.EndGetHostEntry(ar);
+                                            firstNetworkAddress = Dns.EndGetHostEntry(ar);
                                         }
                                         catch
                                         {
                                             // empty catch
                                         }
-                                        if (local0 == null || !local0.AddressList.Any())
+                                        if (firstNetworkAddress == null || !firstNetworkAddress.AddressList.Any())
                                         {
                                             return;
                                         }
-                                        runResult.ResolvedAddress = local0.AddressList[0].ToString();
+                                        runResult.ResolvedAddress = firstNetworkAddress.AddressList[0].ToString();
                                     },
                                     null);
                             }
-                            Result.Runs.Add(runResult);
+                            DispatcherHelper.UIDispatcher.Invoke(() => Result.Runs.Add(runResult));
                             ResultReceived?.Invoke(this, new JobResultEventArgs(runResult));
                             if (runResult.PortReached && JobDefinition.AutoStop)
                             {
@@ -144,6 +154,9 @@
                             if (JobDefinition.MaxTries.HasValue && JobDefinition.MaxTries.Value <= runs)
                             {
                             }
+                            // inform callers that there is a new result
+                            // ReSharper disable once ExplicitCallerInfoArgument
+                            OnPropertyChanged(nameof(Result));                            
                         }
                         catch (Exception ex)
                         {
@@ -162,11 +175,12 @@
         /// <summary>
         /// The timestamp on which the job was finished.
         /// </summary>
-        public DateTimeOffset? Finished
-        {
-            get;
-            private set;
-        }
+        public DateTimeOffset? Finished { get; set; }
+
+        /// <summary>
+        /// The formatted version of <see cref="Finished" />.
+        /// </summary>
+        public string FinishedFormatted => Finished?.ToLocalTime().ToString("G");
 
         /// <summary>
         /// The definition for the current job containing all settings.
@@ -177,12 +191,17 @@
         /// <summary>
         /// The result containing all collected data.
         /// </summary>
-        public JobResultModel Result { get; } = new JobResultModel();
+        public JobResultModel Result { get; set; }
 
         /// <summary>
         /// The timestamp on which the job was started.
         /// </summary>
-        public DateTimeOffset? Started { get; private set; }
+        public DateTimeOffset? Started { get; set; }
+
+        /// <summary>
+        /// The formatted version of <see cref="Started" />.
+        /// </summary>
+        public string StartedFormatted => Started?.ToLocalTime().ToString("G");
 
         /// <summary>
         /// The current state of the jobs.
@@ -190,14 +209,15 @@
         public JobStateEnum State
         {
             get => _state;
-            private set
+            set
             {
                 if (value == _state)
                 {
                     return;
                 }
-                _state = value;                                
-                StateChanged?.Invoke(this, EventArgs.Empty);
+                _state = value;
+                OnPropertyChanged();
+                StateChanged?.Invoke(this, EventArgs.Empty);                
             }
         }
 

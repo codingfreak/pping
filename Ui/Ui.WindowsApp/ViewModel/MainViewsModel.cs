@@ -56,11 +56,11 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                     }
                     if (MessageBox.Show(window, "Do you want to delete the job?", "Delete job", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                     {
-                        Jobs.Remove(CurrentSelectedJob);
-                        CurrentSelectedJob = null;
+                        Jobs.Remove(CurrentSelectedJobDefintion);
+                        CurrentSelectedJobDefintion = null;
                     }
                 },
-                window => CurrentSelectedJob != null);
+                window => CurrentSelectedJobDefintion != null);
             ClosingCommand = new RelayCommand(
                 () =>
                 {
@@ -71,8 +71,8 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                     Jobs.Where(j => j.CurrentJob != null && !j.CurrentJob.Finished.HasValue).ToList().ForEach(
                         j =>
                         {
-                            j.CurrentJob.Stop();                        
-                        });                    
+                            j.CurrentJob.Stop();
+                        });
                     SaveCommand.Execute(null);
                 });
             SaveCommand = new RelayCommand(
@@ -106,7 +106,18 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                     }
                     jobDef.StartNew();
                 },
-                job => CurrentSelectedJob != null);
+                job => CurrentSelectedJobDefintion != null);
+            CleanJobHistoryCommand = new RelayCommand<JobModel>(
+                jobDef =>
+                {
+                    if (jobDef == null)
+                    {
+                        // don't know if this can happen
+                        return;
+                    }
+                    jobDef.Jobs.Clear();
+                },
+                job => CurrentSelectedJobDefintion != null && !CurrentSelectedJobDefintion.IsBusy && CurrentSelectedJobDefintion.Jobs.Any());
         }
 
         /// <inheritdoc />
@@ -136,9 +147,9 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         {
             Jobs.ListChanged += (s, e) =>
             {
-                if (CurrentSelectedJob == null)
+                if (CurrentSelectedJobDefintion == null)
                 {
-                    CurrentSelectedJob = Jobs.First();
+                    CurrentSelectedJobDefintion = Jobs.First();
                 }
             };
             var appName = Assembly.GetExecutingAssembly().GetName().Name;
@@ -150,19 +161,19 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         /// <inheritdoc />
         protected override void OnInternalPropertyChanged(string propertyName)
         {
-            if (propertyName == nameof(CurrentSelectedJob))
+            if (propertyName == nameof(CurrentSelectedJobDefintion))
             {
-                Variables.CurrentSelectedJob = CurrentSelectedJob;
+                Variables.CurrentSelectedJob = CurrentSelectedJobDefintion;
                 RemoveJobCommand.RaiseCanExecuteChanged();
                 StartStopJobCommand.RaiseCanExecuteChanged();
-                if (CurrentSelectedJob == null && Jobs.Any())
+                if (CurrentSelectedJobDefintion == null && Jobs.Any())
                 {
-                    CurrentSelectedJob = Jobs.First();
+                    CurrentSelectedJobDefintion = Jobs.First();
                 }
             }
             base.OnInternalPropertyChanged(propertyName);
         }
-        
+
         /// <summary>
         /// Loads the options from the local file storage.
         /// </summary>
@@ -175,7 +186,8 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             try
             {
                 var fileContent = File.ReadAllText(_optionsFilePath);
-                var options = JsonConvert.DeserializeObject<OptionsModel>(fileContent);
+                var settings = new JsonSerializerSettings();
+                var options = JsonConvert.DeserializeObject<OptionsModel>(fileContent, settings);
                 foreach (var job in options.JobDefinitions)
                 {
                     Jobs.Add(job);
@@ -198,6 +210,11 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         public RelayCommand AddJobCommand { get; private set; }
 
         /// <summary>
+        /// Is used to remove the history of runs a single job.
+        /// </summary>
+        public RelayCommand<JobModel> CleanJobHistoryCommand { get; private set; }
+
+        /// <summary>
         /// Is used to react to window closing event.
         /// </summary>
         public RelayCommand ClosingCommand { get; private set; }
@@ -205,7 +222,12 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         /// <summary>
         /// The currently selected alement of <see cref="Jobs" />.
         /// </summary>
-        public JobModel CurrentSelectedJob { get; set; }
+        public JobModel CurrentSelectedJobDefintion { get; set; }
+
+        /// <summary>
+        /// The currently selected result.
+        /// </summary>
+        public PingJob CurrentSelectedPingJob { get; set; }
 
         /// <summary>
         /// The list of job definitions available.
