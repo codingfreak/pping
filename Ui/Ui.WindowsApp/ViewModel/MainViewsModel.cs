@@ -4,6 +4,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -44,10 +45,11 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         /// <summary>
         /// Provides possiblity to add jobs to the internal list.
         /// </summary>
-        /// <param name="newJob"></param>
+        /// <param name="newJob">The data for the new job.</param>
         public void AddJob(JobModel newJob)
         {
             JobDefinitions.Add(newJob);
+            CurrentSelectedJobDefinition = newJob;
         }
 
         /// <inheritdoc />
@@ -67,7 +69,12 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                     }
                     if (MessageBox.Show(window, "Do you want to delete the job?", "Delete job", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                     {
-                        JobDefinitions.Remove(CurrentSelectedJobDefinition);                        
+                        JobDefinitions.Remove(CurrentSelectedJobDefinition);
+                        CurrentSelectedJobDefinition = null;
+                        if (JobDefinitionsView.Count > 0)
+                        {
+                            JobDefinitionsView.MoveCurrentToFirst();
+                        }
                     }
                 },
                 window => CurrentSelectedJobDefinition != null);
@@ -97,6 +104,8 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                     }
                     catch (Exception ex)
                     {
+                        // TODO
+                        Trace.TraceError(ex.Message);
                     }
                 });
             StartStopJobCommand = new RelayCommand<JobModel>(
@@ -177,6 +186,93 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             base.OnInternalPropertyChanged(propertyName);
         }
 
+        /// <summary>
+        /// Logic to hook up the <see cref="JobsView" /> for UI binding.
+        /// </summary>
+        private void InitJobsView()
+        {
+            CurrentSelectedPingJob = null;
+            if (CurrentSelectedJobDefinition == null)
+            {
+                JobsView = null;
+                return;
+            }
+            JobsView = CollectionViewSource.GetDefaultView(CurrentSelectedJobDefinition.Jobs) as ListCollectionView;
+            if (JobsView == null)
+            {
+                return;
+            }
+            JobsView.CurrentChanged += (s, e) =>
+            {
+                RaisePropertyChanged(() => CurrentSelectedPingJob);
+                InitRunsView();
+            };
+            CurrentSelectedJobDefinition.Jobs.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (INotifyPropertyChanged added in e.NewItems)
+                    {
+                        added.PropertyChanged += JobsOnPropertyChanged;
+                    }
+                }
+                if (e.OldItems != null)
+                {
+                    foreach (INotifyPropertyChanged removed in e.OldItems)
+                    {
+                        removed.PropertyChanged -= JobsOnPropertyChanged;
+                    }
+                }
+            };
+            if (JobsView.Count > 0)
+            {
+                JobsView.MoveCurrentToFirst();
+            }
+        }
+
+        /// <summary>
+        /// Logic to hook up the <see cref="RunsView" /> for UI binding.
+        /// </summary>
+        private void InitRunsView()
+        {
+            CurrentSelectedRun = null;
+            if (CurrentSelectedPingJob?.Result == null)
+            {
+                RunsView = null;
+                return;
+            }
+            RunsView = CollectionViewSource.GetDefaultView(CurrentSelectedPingJob.Result.Runs) as ListCollectionView;
+            if (RunsView == null)
+            {
+                return;
+            }
+            RunsView.CurrentChanged += (s, e) =>
+            {
+                RaisePropertyChanged(() => CurrentSelectedRun);
+            };
+            CurrentSelectedPingJob.Result.Runs.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (INotifyPropertyChanged added in e.NewItems)
+                    {
+                        added.PropertyChanged += RunsOnPropertyChanged;
+                    }
+                }
+                if (e.OldItems != null)
+                {
+                    foreach (INotifyPropertyChanged removed in e.OldItems)
+                    {
+                        removed.PropertyChanged -= RunsOnPropertyChanged;
+                    }
+                }
+            };
+            if (RunsView.Count > 0)
+            {
+                RunsView.MoveCurrentToFirst();
+            }
+        }
+
         private void JobDefintionsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             JobDefinitionsView.Refresh();
@@ -185,11 +281,6 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         private void JobsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             JobsView.Refresh();
-        }
-
-        private void RunsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            RunsView.Refresh();
         }
 
         /// <summary>
@@ -212,10 +303,16 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                 }
                 Options = options;
                 JobDefinitionsView = CollectionViewSource.GetDefaultView(JobDefinitions) as ListCollectionView;
+                if (JobDefinitionsView == null)
+                {
+                    return;
+                }
                 JobDefinitionsView.CurrentChanged += (s, e) =>
                 {
-                    RaisePropertyChanged(() => CurrentSelectedJobDefinition);                   
-                    InitJobsView();                    
+                    RaisePropertyChanged(() => CurrentSelectedJobDefinition);
+                    RaisePropertyChanged(() => IsJobDefinitionAvailable);
+                    CleanJobHistoryCommand.RaiseCanExecuteChanged();
+                    InitJobsView();
                 };
                 JobDefinitions.CollectionChanged += (s, e) =>
                 {
@@ -242,78 +339,9 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             }
         }
 
-        /// <summary>
-        /// Logic to hook up the <see cref="RunsView"/> for UI binding.
-        /// </summary>
-        private void InitRunsView()
+        private void RunsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            CurrentSelectedRun = null;
-            if (CurrentSelectedPingJob?.Result == null)
-            {
-                RunsView = null;
-                return;
-            }
-            RunsView = CollectionViewSource.GetDefaultView(CurrentSelectedPingJob.Result.Runs) as ListCollectionView;
-            RunsView.CurrentChanged += (s, e) =>
-            {
-                RaisePropertyChanged(() => CurrentSelectedRun);                
-            };
-            CurrentSelectedPingJob.Result.Runs.CollectionChanged += (s, e) =>
-            {
-                if (e.NewItems != null)
-                {
-                    foreach (INotifyPropertyChanged added in e.NewItems)
-                    {
-                        added.PropertyChanged += RunsOnPropertyChanged;
-                    }
-                }
-                if (e.OldItems != null)
-                {
-                    foreach (INotifyPropertyChanged removed in e.OldItems)
-                    {
-                        removed.PropertyChanged -= RunsOnPropertyChanged;
-                    }
-                }
-            };
-            if (RunsView.Count > 0)
-            {
-                RunsView.MoveCurrentToFirst();
-            }
-        }
-
-        /// <summary>
-        /// Logic to hook up the <see cref="JobsView"/> for UI binding.
-        /// </summary>
-        private void InitJobsView()
-        {
-            CurrentSelectedPingJob = null;
-            JobsView = CollectionViewSource.GetDefaultView(CurrentSelectedJobDefinition.Jobs) as ListCollectionView;
-            CurrentSelectedJobDefinition.Jobs.CollectionChanged += (s, e) =>
-            {
-                if (e.NewItems != null)
-                {
-                    foreach (INotifyPropertyChanged added in e.NewItems)
-                    {
-                        added.PropertyChanged += JobsOnPropertyChanged;
-                    }
-                }
-                if (e.OldItems != null)
-                {
-                    foreach (INotifyPropertyChanged removed in e.OldItems)
-                    {
-                        removed.PropertyChanged -= JobsOnPropertyChanged;
-                    }
-                }
-            };
-            JobsView.CurrentChanged += (s, e) =>
-            {
-                RaisePropertyChanged(() => CurrentSelectedPingJob);                
-                InitRunsView();
-            };
-            if (JobsView.Count > 0)
-            {
-                JobsView.MoveCurrentToFirst();
-            }
+            RunsView.Refresh();
         }
 
         #endregion
@@ -336,19 +364,6 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         public RelayCommand ClosingCommand { get; private set; }
 
         /// <summary>
-        /// The currently selected element of <see cref="JobDefinitions" />.
-        /// </summary>
-        public PingJob CurrentSelectedPingJob
-        {
-            get => JobsView?.CurrentItem as PingJob;
-            set
-            {
-                JobsView.MoveCurrentTo(value);
-                RaisePropertyChanged();
-            }
-        }
-
-        /// <summary>
         /// The currently selected result.
         /// </summary>
         public JobModel CurrentSelectedJobDefinition
@@ -357,6 +372,19 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             set
             {
                 JobDefinitionsView.MoveCurrentTo(value);
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// The currently selected element of <see cref="JobDefinitions" />.
+        /// </summary>
+        public PingJob CurrentSelectedPingJob
+        {
+            get => JobsView?.CurrentItem as PingJob;
+            set
+            {
+                JobsView.MoveCurrentTo(value);
                 RaisePropertyChanged();
             }
         }
@@ -374,6 +402,18 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             }
         }
 
+        public bool IsJobDefinitionAvailable => CurrentSelectedJobDefinition != null;
+
+        /// <summary>
+        /// The bindable view of job definitions.
+        /// </summary>
+        public ListCollectionView JobDefinitionsView { get; private set; }
+
+        /// <summary>
+        /// The bindable view of jobs.
+        /// </summary>
+        public ListCollectionView JobsView { get; private set; }
+
         /// <summary>
         /// Is used to react to window loaded event.
         /// </summary>
@@ -390,24 +430,14 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         };
 
         /// <summary>
-        /// The bindable view of job definitions.
+        /// Is used to remove one item out of the <see cref="JobDefinitions" />.
         /// </summary>
-        public ListCollectionView JobDefinitionsView { get; private set; }
-
-        /// <summary>
-        /// The bindable view of jobs.
-        /// </summary>
-        public ListCollectionView JobsView { get; private set; }
+        public RelayCommand<Window> RemoveJobCommand { get; private set; }
 
         /// <summary>
         /// The bindable view of runs history.
         /// </summary>
         public ListCollectionView RunsView { get; private set; }
-
-        /// <summary>
-        /// Is used to remove one item out of the <see cref="JobDefinitions" />.
-        /// </summary>
-        public RelayCommand<Window> RemoveJobCommand { get; private set; }
 
         /// <summary>
         /// Is used to trigger writing of options back to file system.

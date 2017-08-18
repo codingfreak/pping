@@ -20,6 +20,7 @@
     WindowState="{Binding Options.WindowState, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     WindowStartupLocation="CenterScreen">
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Converters:InverseBoolConverter x:Key="InverseBoolConverter" />
         <Style TargetType="{x:Type Button}" x:Key="GridButton">
             <Setter Property="Padding" Value="2" />
@@ -38,11 +39,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <TextBlock>
-                            <Hyperlink TextDecorations="{x:Null}">
-                                <Run Text="{TemplateBinding Content}" />
-                            </Hyperlink>
-                        </TextBlock>
+                        <TextBlock><Hyperlink TextDecorations="{x:Null}"><Run Text="{TemplateBinding Content}" /></Hyperlink></TextBlock>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -81,7 +78,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style TargetType="DataGridCell" x:Key="RightColumn">
+        <Style TargetType="{x:Type DataGridCell}" x:Key="RightColumn">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridCell}">
@@ -92,7 +89,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style TargetType="DataGridCell" x:Key="CenterColumn">
+        <Style TargetType="{x:Type DataGridCell}" x:Key="CenterColumn">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridCell}">
@@ -186,7 +183,7 @@
             <GroupBox Grid.Row="2" Header="Properties">
                 <xctk:PropertyGrid  SelectedObject="{Binding CurrentSelectedJobDefinition}"
                                     IsEnabled="{Binding CurrentSelectedJobDefinition.IsBusy, Converter={StaticResource InverseBoolConverter}, Mode=OneWay}"
-                                    ShowSearchBox="False" ShowTitle="False" ShowSortOptions="False" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                    ShowSearchBox="False" ShowTitle="False" ShowSortOptions="False" ScrollViewer.VerticalScrollBarVisibility="Auto" Visibility="{Binding IsJobDefinitionAvailable, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"  />
             </GroupBox>
         </Grid>
         <GridSplitter Grid.Column="1" Width="3" ResizeBehavior="PreviousAndNext" ResizeDirection="Columns" />
