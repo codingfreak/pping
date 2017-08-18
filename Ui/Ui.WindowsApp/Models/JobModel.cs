@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
 
@@ -49,12 +50,13 @@
         /// <summary>
         /// Starts a new job
         /// </summary>
-        public void StartNew()
+        public PingJob StartNew()
         {
             var job = new PingJob(this);
             Jobs.Add(job);
             CurrentJob = job;
             job.Start();
+            return job;
         }
 
         private void OnCurrentJobResultReceived(object sender, JobResultEventArgs e)
@@ -78,7 +80,7 @@
             // ReSharper disable once ExplicitCallerInfoArgument 
             OnPropertyChanged(nameof(StateText));
             // ReSharper disable once ExplicitCallerInfoArgument 
-            OnPropertyChanged(nameof(State));            
+            OnPropertyChanged(nameof(State));
         }
 
         #endregion
@@ -130,11 +132,14 @@
         /// <summary>
         /// The list of jobs associated with this definition.
         /// </summary>
-        public BindingList<PingJob> Jobs { get; } = new BindingList<PingJob>();
+        public ObservableCollection<PingJob> Jobs { get; set; } = new ObservableCollection<PingJob>();
 
         /// <summary>
         /// Defines an optional maximum rutime for jobs of this definition.
         /// </summary>
+        [Category("Behavior")]
+        [DisplayName("Maximum Runtime")]
+        [Description("Defines an optional maximum rutime for jobs of this definition.")]
         public TimeSpan? MaxRuntime { get; set; }
 
         /// <summary>
@@ -143,6 +148,9 @@
         /// <remarks>
         /// Defaults to 4.
         /// </remarks>
+        [Category("Behavior")]
+        [DisplayName("Maximum Pings")]
+        [Description("Defines an optional maximum amount of pping operations of this definition.")]
         public int? MaxTries { get; set; } = 4;
 
         /// <summary>
@@ -157,35 +165,49 @@
         public DateTimeOffset? PlannedStart { get; set; }
 
         /// <summary>
-        /// Defines if DNS resolving should be perfomed on every run.
+        /// Defines if IP address resolving should be perfomed on every run.
         /// </summary>
+        [Category("Misc")]
+        [DisplayName("Resolve IP address")]
+        [Description("Defines if IP address resolving should be perfomed on every run.")]
         public bool ResolveAddress { get; set; }
 
+        /// <summary>
+        /// The caption for start-stop-commands.
+        /// </summary>
+        [Browsable(false)]
         public string StartStopCaption => CurrentJob == null ? "Start" : "Stop";
 
         /// <summary>
         /// The state of the current jobs if any.
         /// </summary>
+        [Browsable(false)]
         public JobStateEnum State => CurrentJob?.State ?? JobStateEnum.Unkown;
 
         /// <summary>
         /// The state text of the current jobs if any.
         /// </summary>
+        [Browsable(false)]
         public string StateText => CurrentJob?.State.ToString() ?? "-";
 
         /// <summary>
         /// The target host name or IP address to use.
         /// </summary>
+        [Category("Basic")]
+        [DisplayName("Target Address")]
+        [Description("The target host name or IP address to use.")]
         public string TargetAddess { get; set; }
 
         /// <summary>
         /// The list of ports to check on the <see cref="TargetAddess" />.
         /// </summary>
+        [Browsable(false)]
         public IEnumerable<int> TargetPorts { get; set; } = Enumerable.Empty<int>();
 
         /// <summary>
         /// The readable version of <see cref="TargetPorts" />.
         /// </summary>
+        [Browsable(false)]
         public string TargetPortsFormatted => string.Join(",", TargetPorts ?? Enumerable.Empty<int>());
 
         /// <summary>
@@ -215,6 +237,9 @@
         /// <remarks>
         /// Defaults to 1 second.
         /// </remarks>
+        [Category("Behavior")]
+        [DisplayName("Timeout")]
+        [Description("The timout to apply for each network operation. The port is considred as unreachable after this time period.")]
         public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(1);
 
         /// <summary>
@@ -244,6 +269,9 @@
         /// <remarks>
         /// Defaults to 10 seconds.
         /// </remarks>
+        [Category("Behavior")]
+        [DisplayName("Wait time")]
+        [Description("Defines the pause between each test run.")]
         public TimeSpan WaitTime { get; set; } = TimeSpan.FromSeconds(10);
 
         #endregion

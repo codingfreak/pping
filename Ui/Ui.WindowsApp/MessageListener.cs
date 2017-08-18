@@ -19,7 +19,7 @@
     {
         #region member vars
 
-        public bool IsDataSource = true;
+        public bool IsDataSource => true;
 
         #endregion
 
@@ -48,7 +48,7 @@
                         // strange too
                         return;
                     }
-                    ctx.Jobs.Add(m.NewJob);
+                    ctx.AddJob(m.NewJob);
                 });
             Messenger.Default.Register<ShowPortWindowMessage>(
                 this,

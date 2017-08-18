@@ -2,12 +2,14 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Data;
 
     using cfUtils.Logic.Wpf.MvvmLight;
 
@@ -39,6 +41,15 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
 
         #region methods
 
+        /// <summary>
+        /// Provides possiblity to add jobs to the internal list.
+        /// </summary>
+        /// <param name="newJob"></param>
+        public void AddJob(JobModel newJob)
+        {
+            JobDefinitions.Add(newJob);
+        }
+
         /// <inheritdoc />
         protected override void InitCommands()
         {
@@ -56,33 +67,30 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                     }
                     if (MessageBox.Show(window, "Do you want to delete the job?", "Delete job", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                     {
-                        Jobs.Remove(CurrentSelectedJobDefintion);
-                        CurrentSelectedJobDefintion = null;
+                        JobDefinitions.Remove(CurrentSelectedJobDefinition);                        
                     }
                 },
-                window => CurrentSelectedJobDefintion != null);
+                window => CurrentSelectedJobDefinition != null);
             ClosingCommand = new RelayCommand(
                 () =>
                 {
-                    while (Jobs.Any(j => j.CurrentJob != null && j.CurrentJob.State == JobStateEnum.Stopping))
+                    while (JobDefinitions.Any(j => j.CurrentJob != null && j.CurrentJob.State == JobStateEnum.Stopping))
                     {
                         Task.Delay(100).Wait();
                     }
-                    Jobs.Where(j => j.CurrentJob != null && !j.CurrentJob.Finished.HasValue).ToList().ForEach(
+                    JobDefinitions.Where(j => j.CurrentJob != null && !j.CurrentJob.Finished.HasValue).ToList().ForEach(
                         j =>
                         {
                             j.CurrentJob.Stop();
                         });
                     SaveCommand.Execute(null);
                 });
+            LoadedCommand = new RelayCommand(ReloadOptions);
             SaveCommand = new RelayCommand(
                 () =>
                 {
-                    var options = new OptionsModel
-                    {
-                        JobDefinitions = Jobs.ToList()
-                    };
-                    var fileContent = JsonConvert.SerializeObject(options);
+                    Options.JobDefinitions = JobDefinitions.ToList();
+                    var fileContent = JsonConvert.SerializeObject(Options);
                     try
                     {
                         File.WriteAllText(_optionsFilePath, fileContent);
@@ -104,9 +112,9 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                         jobDef.CurrentJob.Stop();
                         return;
                     }
-                    jobDef.StartNew();
+                    CurrentSelectedPingJob = jobDef.StartNew();
                 },
-                job => CurrentSelectedJobDefintion != null);
+                job => CurrentSelectedJobDefinition != null);
             CleanJobHistoryCommand = new RelayCommand<JobModel>(
                 jobDef =>
                 {
@@ -116,8 +124,9 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                         return;
                     }
                     jobDef.Jobs.Clear();
+                    JobDefinitionsView.Refresh();
                 },
-                job => CurrentSelectedJobDefintion != null && !CurrentSelectedJobDefintion.IsBusy && CurrentSelectedJobDefintion.Jobs.Any());
+                job => CurrentSelectedJobDefinition != null && !CurrentSelectedJobDefinition.IsBusy && CurrentSelectedJobDefinition.Jobs.Any());
         }
 
         /// <inheritdoc />
@@ -125,7 +134,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         {
             var appName = Assembly.GetExecutingAssembly().GetName().Name;
             Title = appName + " (DESIGNER)";
-            Jobs = new BindingList<JobModel>(
+            JobDefinitions = new ObservableCollection<JobModel>(
                 new List<JobModel>
                 {
                     new JobModel
@@ -139,19 +148,13 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                         TargetPorts = new[] { 3389 }
                     }
                 });
+            JobDefinitionsView = CollectionViewSource.GetDefaultView(JobDefinitions) as ListCollectionView;
             base.InitDesignTimeData();
         }
 
         /// <inheritdoc />
         protected override void InitRuntimeData()
         {
-            Jobs.ListChanged += (s, e) =>
-            {
-                if (CurrentSelectedJobDefintion == null)
-                {
-                    CurrentSelectedJobDefintion = Jobs.First();
-                }
-            };
             var appName = Assembly.GetExecutingAssembly().GetName().Name;
             Title = appName;
             ReloadOptions();
@@ -161,17 +164,32 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         /// <inheritdoc />
         protected override void OnInternalPropertyChanged(string propertyName)
         {
-            if (propertyName == nameof(CurrentSelectedJobDefintion))
+            if (propertyName == nameof(CurrentSelectedJobDefinition))
             {
-                Variables.CurrentSelectedJob = CurrentSelectedJobDefintion;
+                Variables.CurrentSelectedJob = CurrentSelectedJobDefinition;
                 RemoveJobCommand.RaiseCanExecuteChanged();
                 StartStopJobCommand.RaiseCanExecuteChanged();
-                if (CurrentSelectedJobDefintion == null && Jobs.Any())
+                if (CurrentSelectedJobDefinition == null && JobDefinitions.Any())
                 {
-                    CurrentSelectedJobDefintion = Jobs.First();
+                    CurrentSelectedJobDefinition = JobDefinitions.First();
                 }
             }
             base.OnInternalPropertyChanged(propertyName);
+        }
+
+        private void JobDefintionsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            JobDefinitionsView.Refresh();
+        }
+
+        private void JobsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            JobsView.Refresh();
+        }
+
+        private void RunsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            RunsView.Refresh();
         }
 
         /// <summary>
@@ -190,13 +208,111 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                 var options = JsonConvert.DeserializeObject<OptionsModel>(fileContent, settings);
                 foreach (var job in options.JobDefinitions)
                 {
-                    Jobs.Add(job);
+                    JobDefinitions.Add(job);
                 }
+                Options = options;
+                JobDefinitionsView = CollectionViewSource.GetDefaultView(JobDefinitions) as ListCollectionView;
+                JobDefinitionsView.CurrentChanged += (s, e) =>
+                {
+                    RaisePropertyChanged(() => CurrentSelectedJobDefinition);                   
+                    InitJobsView();                    
+                };
+                JobDefinitions.CollectionChanged += (s, e) =>
+                {
+                    if (e.NewItems != null)
+                    {
+                        foreach (INotifyPropertyChanged added in e.NewItems)
+                        {
+                            added.PropertyChanged += JobDefintionsOnPropertyChanged;
+                        }
+                    }
+                    if (e.OldItems != null)
+                    {
+                        foreach (INotifyPropertyChanged removed in e.OldItems)
+                        {
+                            removed.PropertyChanged -= JobDefintionsOnPropertyChanged;
+                        }
+                    }
+                };
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
+            }
+        }
+
+        /// <summary>
+        /// Logic to hook up the <see cref="RunsView"/> for UI binding.
+        /// </summary>
+        private void InitRunsView()
+        {
+            CurrentSelectedRun = null;
+            if (CurrentSelectedPingJob?.Result == null)
+            {
+                RunsView = null;
+                return;
+            }
+            RunsView = CollectionViewSource.GetDefaultView(CurrentSelectedPingJob.Result.Runs) as ListCollectionView;
+            RunsView.CurrentChanged += (s, e) =>
+            {
+                RaisePropertyChanged(() => CurrentSelectedRun);                
+            };
+            CurrentSelectedPingJob.Result.Runs.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (INotifyPropertyChanged added in e.NewItems)
+                    {
+                        added.PropertyChanged += RunsOnPropertyChanged;
+                    }
+                }
+                if (e.OldItems != null)
+                {
+                    foreach (INotifyPropertyChanged removed in e.OldItems)
+                    {
+                        removed.PropertyChanged -= RunsOnPropertyChanged;
+                    }
+                }
+            };
+            if (RunsView.Count > 0)
+            {
+                RunsView.MoveCurrentToFirst();
+            }
+        }
+
+        /// <summary>
+        /// Logic to hook up the <see cref="JobsView"/> for UI binding.
+        /// </summary>
+        private void InitJobsView()
+        {
+            CurrentSelectedPingJob = null;
+            JobsView = CollectionViewSource.GetDefaultView(CurrentSelectedJobDefinition.Jobs) as ListCollectionView;
+            CurrentSelectedJobDefinition.Jobs.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (INotifyPropertyChanged added in e.NewItems)
+                    {
+                        added.PropertyChanged += JobsOnPropertyChanged;
+                    }
+                }
+                if (e.OldItems != null)
+                {
+                    foreach (INotifyPropertyChanged removed in e.OldItems)
+                    {
+                        removed.PropertyChanged -= JobsOnPropertyChanged;
+                    }
+                }
+            };
+            JobsView.CurrentChanged += (s, e) =>
+            {
+                RaisePropertyChanged(() => CurrentSelectedPingJob);                
+                InitRunsView();
+            };
+            if (JobsView.Count > 0)
+            {
+                JobsView.MoveCurrentToFirst();
             }
         }
 
@@ -220,22 +336,76 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         public RelayCommand ClosingCommand { get; private set; }
 
         /// <summary>
-        /// The currently selected alement of <see cref="Jobs" />.
+        /// The currently selected element of <see cref="JobDefinitions" />.
         /// </summary>
-        public JobModel CurrentSelectedJobDefintion { get; set; }
+        public PingJob CurrentSelectedPingJob
+        {
+            get => JobsView?.CurrentItem as PingJob;
+            set
+            {
+                JobsView.MoveCurrentTo(value);
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// The currently selected result.
         /// </summary>
-        public PingJob CurrentSelectedPingJob { get; set; }
+        public JobModel CurrentSelectedJobDefinition
+        {
+            get => JobDefinitionsView.CurrentItem as JobModel;
+            set
+            {
+                JobDefinitionsView.MoveCurrentTo(value);
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
-        /// The list of job definitions available.
+        /// The currently selected result.
         /// </summary>
-        public BindingList<JobModel> Jobs { get; set; } = new BindingList<JobModel>();
+        public JobSingleRunModel CurrentSelectedRun
+        {
+            get => RunsView?.CurrentItem as JobSingleRunModel;
+            set
+            {
+                RunsView.MoveCurrentTo(value);
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
-        /// Is used to remove one item out of the <see cref="Jobs" />.
+        /// Is used to react to window loaded event.
+        /// </summary>
+        public RelayCommand LoadedCommand { get; private set; }
+
+        /// <summary>
+        /// The currently used options.
+        /// </summary>
+        public OptionsModel Options { get; set; } = new OptionsModel
+        {
+            WindowWidth = 800,
+            WindowHeight = 600,
+            WindowState = WindowState.Normal
+        };
+
+        /// <summary>
+        /// The bindable view of job definitions.
+        /// </summary>
+        public ListCollectionView JobDefinitionsView { get; private set; }
+
+        /// <summary>
+        /// The bindable view of jobs.
+        /// </summary>
+        public ListCollectionView JobsView { get; private set; }
+
+        /// <summary>
+        /// The bindable view of runs history.
+        /// </summary>
+        public ListCollectionView RunsView { get; private set; }
+
+        /// <summary>
+        /// Is used to remove one item out of the <see cref="JobDefinitions" />.
         /// </summary>
         public RelayCommand<Window> RemoveJobCommand { get; private set; }
 
@@ -253,6 +423,11 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         /// The title of the window.
         /// </summary>
         public string Title { get; private set; }
+
+        /// <summary>
+        /// The list of job definitions available.
+        /// </summary>
+        private ObservableCollection<JobModel> JobDefinitions { get; set; } = new ObservableCollection<JobModel>();
 
         #endregion
     }

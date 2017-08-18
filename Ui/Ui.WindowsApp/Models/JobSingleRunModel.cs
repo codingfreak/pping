@@ -9,6 +9,8 @@
     {
         #region properties
 
+        public TimeSpan Duration { get; set; }
+
         public int Port { get; set; }
 
         public string PortPurpose

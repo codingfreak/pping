@@ -51,8 +51,6 @@
             JobDefinition = jobDefinition;
             State = JobStateEnum.Defined;
             Result = new JobResultModel();
-            // ReSharper disable once ExplicitCallerInfoArgument
-            //Result.Runs.ListChanged += (s, e) => OnPropertyChanged(nameof(Result));
         }
 
         #endregion
@@ -105,7 +103,11 @@
         private async Task Run()
         {
             var runs = 0;
-            while (!_tokenSource.IsCancellationRequested)
+            var shouldRun = true;
+            var overallWatch = new Stopwatch();
+            var portWatch = new Stopwatch();
+            overallWatch.Start();
+            while (!_tokenSource.IsCancellationRequested && shouldRun)
             {
                 runs++;
                 State = JobStateEnum.Running;
@@ -120,7 +122,10 @@
                                 Udp = JobDefinition.Udp,
                                 Port = port
                             };
+                            portWatch.Restart();
                             runResult.PortReached = NetworkUtil.IsPortOpened(JobDefinition.TargetAddess, port, (int)JobDefinition.Timeout.TotalSeconds, JobDefinition.Udp);
+                            portWatch.Stop();
+                            runResult.Duration = portWatch.Elapsed;
                             if (JobDefinition.ResolveAddress)
                             {
                                 // job should try to resolve ip address
@@ -149,10 +154,21 @@
                             ResultReceived?.Invoke(this, new JobResultEventArgs(runResult));
                             if (runResult.PortReached && JobDefinition.AutoStop)
                             {
+                                // the port is reached and autostop is on
+                                shouldRun = false;
                                 return;
                             }
                             if (JobDefinition.MaxTries.HasValue && JobDefinition.MaxTries.Value <= runs)
                             {
+                                // the maximum amount of tries is reached
+                                shouldRun = false;
+                                return;                                
+                            }
+                            if (JobDefinition.MaxRuntime.HasValue && JobDefinition.MaxRuntime.Value <= overallWatch.Elapsed)
+                            {
+                                // maximum runtime is reached
+                                shouldRun = false;
+                                return;
                             }
                             // inform callers that there is a new result
                             // ReSharper disable once ExplicitCallerInfoArgument
@@ -166,6 +182,7 @@
                 State = JobStateEnum.Waiting;
                 await Task.Delay(JobDefinition.WaitTime, CancellationToken.None);
             }
+            overallWatch.Stop();            
         }
 
         #endregion
