@@ -6,7 +6,7 @@
     using System.ComponentModel;
     using System.Linq;
 
-    using cfUtils.Logic.Portable.Extensions;
+    using cfUtils.Logic.Standard.Extensions;
 
     using Enumerations;
 

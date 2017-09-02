@@ -275,12 +275,12 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
 
         private void JobDefintionsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            JobDefinitionsView.Refresh();
+            //JobDefinitionsView.Refresh();
         }
 
         private void JobsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            JobsView.Refresh();
+            //JobsView.Refresh();
         }
 
         /// <summary>

@@ -6,7 +6,7 @@
     using System.Linq;
     using System.Windows;
 
-    using cfUtils.Logic.Portable.Extensions;
+    using cfUtils.Logic.Standard.Extensions;
     using cfUtils.Logic.Wpf.MvvmLight;
 
     using GalaSoft.MvvmLight.Command;
