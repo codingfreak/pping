@@ -76,6 +76,24 @@ If you want to check lets say 2 ports (http and https) on a certain address. Jus
     #   8 -> Pinging host google.com (IP:-) on TCP port 443 with timeout 1: OPEN
     Finished pinging host google.com (IP:-). 8 pings sent (6 OPEN, 2 CLOSED)
 
+It is also possible to define a range of ports by delimiting them with '-':
+
+    pping google.com 80-82 -d                                                              
+    Starting pinging host google.com on TCP port(s) 80-82 4 times:                           
+    #   1 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: OPEN              
+    #   2 -> Pinging host google.com (IP:-) on TCP port 81 with timeout 1: CLOSED (TimedOut) 
+    #   3 -> Pinging host google.com (IP:-) on TCP port 82 with timeout 1: CLOSED (TimedOut) 
+    #   4 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: OPEN              
+    #   5 -> Pinging host google.com (IP:-) on TCP port 81 with timeout 1: CLOSED (TimedOut) 
+    #   6 -> Pinging host google.com (IP:-) on TCP port 82 with timeout 1: CLOSED (TimedOut) 
+    #   7 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: OPEN              
+    #   8 -> Pinging host google.com (IP:-) on TCP port 81 with timeout 1: CLOSED (TimedOut) 
+    #   9 -> Pinging host google.com (IP:-) on TCP port 82 with timeout 1: CLOSED (TimedOut) 
+    #  10 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: OPEN              
+    #  11 -> Pinging host google.com (IP:-) on TCP port 81 with timeout 1: CLOSED (TimedOut) 
+    #  12 -> Pinging host google.com (IP:-) on TCP port 82 with timeout 1: CLOSED (TimedOut) 
+    Finished pinging host google.com (IP:-). 12 pings sent (4 OPEN, 8 CLOSED)                
+
 ## Option table
 
 The following table lists all available options:
@@ -83,7 +101,7 @@ The following table lists all available options:
 | Abbreviation  | Full name                 | Sample            | Purpose
 |:---           |:---                       |:---               |:---
 | a             | address                   | -a=google.com     | The address to perform the pping to (can be omitted by specifying it after the command itself).
-| p             | port                      | -p=80,443         | The comma-separated list of ports to pping to (can be omitted by specifying it after the address).
+| p             | port                      | -p=80,443         | The comma-separated list or range of ports to pping to (can be omitted by specifying it after the address).
 | t             | endless                   | -t                | Perform a constant pping.
 | r             | repeats                   | -r=10             | Number of repeats in a non-endless pping (defaults to 4)
 | tim           | timeout                   | -tim=2            | Timeout in seconds (defaults to 1)
