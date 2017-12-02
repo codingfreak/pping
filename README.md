@@ -76,6 +76,24 @@ If you want to check lets say 2 ports (http and https) on a certain address. Jus
     #   8 -> Pinging host google.com (IP:-) on TCP port 443 with timeout 1: OPEN
     Finished pinging host google.com (IP:-). 8 pings sent (6 OPEN, 2 CLOSED)
 
+It is also possible to define a range of ports by delimiting them with '-':
+
+    pping google.com 80-82 -d                                                              
+    Starting pinging host google.com on TCP port(s) 80-82 4 times:                           
+    #   1 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: OPEN              
+    #   2 -> Pinging host google.com (IP:-) on TCP port 81 with timeout 1: CLOSED (TimedOut) 
+    #   3 -> Pinging host google.com (IP:-) on TCP port 82 with timeout 1: CLOSED (TimedOut) 
+    #   4 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: OPEN              
+    #   5 -> Pinging host google.com (IP:-) on TCP port 81 with timeout 1: CLOSED (TimedOut) 
+    #   6 -> Pinging host google.com (IP:-) on TCP port 82 with timeout 1: CLOSED (TimedOut) 
+    #   7 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: OPEN              
+    #   8 -> Pinging host google.com (IP:-) on TCP port 81 with timeout 1: CLOSED (TimedOut) 
+    #   9 -> Pinging host google.com (IP:-) on TCP port 82 with timeout 1: CLOSED (TimedOut) 
+    #  10 -> Pinging host google.com (IP:-) on TCP port 80 with timeout 1: OPEN              
+    #  11 -> Pinging host google.com (IP:-) on TCP port 81 with timeout 1: CLOSED (TimedOut) 
+    #  12 -> Pinging host google.com (IP:-) on TCP port 82 with timeout 1: CLOSED (TimedOut) 
+    Finished pinging host google.com (IP:-). 12 pings sent (4 OPEN, 8 CLOSED)                
+
 ## Option table
 
 The following table lists all available options:
