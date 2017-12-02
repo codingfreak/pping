@@ -101,7 +101,7 @@ The following table lists all available options:
 | Abbreviation  | Full name                 | Sample            | Purpose
 |:---           |:---                       |:---               |:---
 | a             | address                   | -a=google.com     | The address to perform the pping to (can be omitted by specifying it after the command itself).
-| p             | port                      | -p=80,443         | The comma-separated list of ports to pping to (can be omitted by specifying it after the address).
+| p             | port                      | -p=80,443         | The comma-separated list or range of ports to pping to (can be omitted by specifying it after the address).
 | t             | endless                   | -t                | Perform a constant pping.
 | r             | repeats                   | -r=10             | Number of repeats in a non-endless pping (defaults to 4)
 | tim           | timeout                   | -tim=2            | Timeout in seconds (defaults to 1)
