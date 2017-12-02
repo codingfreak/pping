@@ -40,7 +40,8 @@
                     IsMandatory = true,
                     OrderPosition = 2,
                     IsNumeric = true,
-                    IsCommaSeparated = true,
+                    CanBeCommaSeparated = true,
+                    CanBeRanged = true,
                     SampleValue = "73636, 80"
                 },
                 new CommandlineArgumentInfo
@@ -168,8 +169,21 @@
                     }
                     else
                     {
-                        ports.Add(int.Parse(portValue));
-                    }
+                        if (portValue.Contains('-'))
+                        {
+                            var portsRanged = portValue.Split('-');
+                            var from = int.Parse(portsRanged[0]);
+                            var to = int.Parse(portsRanged[1]);
+                            for (var p = from; p <= to; p++)
+                            {
+                                ports.Add(p);
+                            }
+                        }
+                        else
+                        {
+                            ports.Add(int.Parse(portValue));
+                        }                        
+                    }                                                         
                     timeout = int.Parse(list.First(a => a.Abbreviation == "tim").ResolvedValue);
                     repeats = int.Parse(list.First(a => a.Abbreviation == "r").ResolvedValue);
                     autoStop = list.SingleOrDefault(a => a.Abbreviation == "as") != null;
