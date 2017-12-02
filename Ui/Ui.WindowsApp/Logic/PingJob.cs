@@ -10,11 +10,11 @@
 
     using cfUtils.Logic.Base.Utilities;
 
+    using devdeer.DoctorFlox.Logic.Wpf.Helpers;
+
     using Enumerations;
 
     using EventArguments;
-
-    using GalaSoft.MvvmLight.Threading;
 
     using Models;
 
@@ -150,7 +150,7 @@
                                     },
                                     null);
                             }
-                            DispatcherHelper.UIDispatcher.Invoke(() => Result.Runs.Add(runResult));
+                            DispatcherHelper.BeginInvoke(() => Result.Runs.Add(runResult));
                             ResultReceived?.Invoke(this, new JobResultEventArgs(runResult));
                             if (runResult.PortReached && JobDefinition.AutoStop)
                             {

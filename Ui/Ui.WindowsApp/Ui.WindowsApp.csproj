@@ -36,26 +36,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="cfUtils.cfBaseUtils, Version=1.0.31.46, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfBaseUtils.1.0.31\lib\net\cfUtils.cfBaseUtils.dll</HintPath>
     </Reference>
     <Reference Include="cfUtils.cfStandardUtils, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfStandardUtils.1.0.3\lib\netstandard1.2\cfUtils.cfStandardUtils.dll</HintPath>
     </Reference>
-    <Reference Include="cfUtils.cfWpfUtils, Version=1.0.41.48, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfWpfUtils.1.0.41\lib\net\cfUtils.cfWpfUtils.dll</HintPath>
-    </Reference>
-    <Reference Include="GalaSoft.MvvmLight, Version=5.3.0.19026, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
-    </Reference>
-    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
-    </Reference>
-    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    <Reference Include="DoctorFlox.Logic.Wpf, Version=0.0.2.28705, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\devdeer.DoctorFlox.0.0.7-beta\lib\net461\DoctorFlox.Logic.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -71,10 +62,11 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -125,11 +117,9 @@
     <Compile Include="Logic\PingJob.cs" />
     <Compile Include="Logic\Variables.cs" />
     <Compile Include="MessageListener.cs" />
-    <Compile Include="Messages\AddJobWindowOpenMessage.cs" />
     <Compile Include="Messages\JobAddedMessage.cs" />
     <Compile Include="Messages\PortAddInvokedMessage.cs" />
     <Compile Include="Messages\PortWindowClosedMessage.cs" />
-    <Compile Include="Messages\ShowPortWindowMessage.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\JobModel.cs" />
     <Compile Include="Models\JobResultModel.cs" />

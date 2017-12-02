@@ -11,13 +11,12 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Data;
-
-    using cfUtils.Logic.Wpf.MvvmLight;
+    
+    using devdeer.DoctorFlox.Logic.Wpf;
+    using devdeer.DoctorFlox.Logic.Wpf.Commands;
 
     using Enumerations;
-
-    using GalaSoft.MvvmLight.Command;
-
+    
     using Logic;
 
     using Messages;
@@ -58,7 +57,8 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             AddJobCommand = new RelayCommand(
                 () =>
                 {
-                    MessengerInstance.Send(new AddJobWindowOpenMessage());
+                    var windowInstance = CreateWindowInstance("AddJobWindow");
+                    windowInstance?.ShowDialog();                    
                 });
             RemoveJobCommand = new RelayCommand<Window>(
                 window =>
@@ -162,16 +162,16 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         }
 
         /// <inheritdoc />
-        protected override void InitRuntimeData()
+        protected override void InitData()
         {
             var appName = Assembly.GetExecutingAssembly().GetName().Name;
             Title = appName;
             ReloadOptions();
-            base.InitRuntimeData();
+            base.InitData();
         }
 
         /// <inheritdoc />
-        protected override void OnInternalPropertyChanged(string propertyName)
+        protected override void OnPropertyChanged(string propertyName = null)
         {
             if (propertyName == nameof(CurrentSelectedJobDefinition))
             {
@@ -183,7 +183,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                     CurrentSelectedJobDefinition = JobDefinitions.First();
                 }
             }
-            base.OnInternalPropertyChanged(propertyName);
+            base.OnPropertyChanged(propertyName);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             }
             JobsView.CurrentChanged += (s, e) =>
             {
-                RaisePropertyChanged(() => CurrentSelectedPingJob);
+                OnPropertyChanged(nameof(CurrentSelectedPingJob));
                 InitRunsView();
             };
             CurrentSelectedJobDefinition.Jobs.CollectionChanged += (s, e) =>
@@ -248,7 +248,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             }
             RunsView.CurrentChanged += (s, e) =>
             {
-                RaisePropertyChanged(() => CurrentSelectedRun);
+                OnPropertyChanged(nameof(CurrentSelectedRun));                
             };
             CurrentSelectedPingJob.Result.Runs.CollectionChanged += (s, e) =>
             {
@@ -309,8 +309,8 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
                 }
                 JobDefinitionsView.CurrentChanged += (s, e) =>
                 {
-                    RaisePropertyChanged(() => CurrentSelectedJobDefinition);
-                    RaisePropertyChanged(() => IsJobDefinitionAvailable);
+                    OnPropertyChanged(nameof(CurrentSelectedJobDefinition));
+                    OnPropertyChanged(nameof(IsJobDefinitionAvailable));                    
                     CleanJobHistoryCommand.RaiseCanExecuteChanged();
                     InitJobsView();
                 };
@@ -368,11 +368,11 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
         /// </summary>
         public JobModel CurrentSelectedJobDefinition
         {
-            get => JobDefinitionsView.CurrentItem as JobModel;
+            get => JobDefinitionsView?.CurrentItem as JobModel;
             set
             {
                 JobDefinitionsView.MoveCurrentTo(value);
-                RaisePropertyChanged();
+                OnPropertyChanged();                
             }
         }
 
@@ -385,7 +385,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             set
             {
                 JobsView.MoveCurrentTo(value);
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -398,7 +398,7 @@ namespace codingfreaks.pping.Ui.WindowsApp.ViewModel
             set
             {
                 RunsView.MoveCurrentTo(value);
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

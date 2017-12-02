@@ -5,6 +5,8 @@
     using System.IO;
     using System.Linq;
 
+    using Autofac;
+
     using Models;
 
     public static class Variables
@@ -18,7 +20,7 @@
                 if (!File.Exists(path))
                 {
                     return null;
-                }                
+                }
                 return File.ReadAllLines(path).Select(l => l.Split(';')).Select(
                     splitted => new PortModel
                     {
@@ -35,9 +37,11 @@
 
         public static AddPortWindow AddPortWindow { get; set; }
 
-        public static IEnumerable<PortModel> KnownPorts => _portFactory.Value;
+        public static IContainer AutoFacContainer { get; set; }
 
         public static JobModel CurrentSelectedJob { get; set; }
+
+        public static IEnumerable<PortModel> KnownPorts => _portFactory.Value;
 
         #endregion
     }

@@ -7,9 +7,9 @@
     using System.Windows;
 
     using cfUtils.Logic.Standard.Extensions;
-    using cfUtils.Logic.Wpf.MvvmLight;
 
-    using GalaSoft.MvvmLight.Command;
+    using devdeer.DoctorFlox.Logic.Wpf;
+    using devdeer.DoctorFlox.Logic.Wpf.Commands;
 
     using Logic;
 
@@ -43,11 +43,15 @@
             ShowPortSelectCommand = new RelayCommand(
                 () =>
                 {
-                    MessengerInstance.Send(new ShowPortWindowMessage(GetType()));
+                    var windowInstance = CreateWindowInstance("AddPortWindow");
+                    if (windowInstance == null)
+                    {
+                        return;
+                    }                    
+                    windowInstance.ShowDialog();                    
                 },
                 () => Variables.AddPortWindow == null);
         }
-        
 
         /// <inheritdoc />
         protected override void InitDesignTimeData()
@@ -84,20 +88,20 @@
                 });
             base.InitMessenger();
         }
-
-        protected override void InitRuntimeData()
+        
+        protected override void InitData()
         {
             Title = "Add Job";
             Data = new JobModel();
             Variables.CurrentSelectedJob = Data;
-            base.InitRuntimeData();
+            base.InitData();
         }
 
         #endregion
 
         #region properties
 
-        public JobModel Data { get; private set; } 
+        public JobModel Data { get; private set; }
 
         public RelayCommand<Window> OkCommand { get; private set; }
 
@@ -137,7 +141,7 @@
                         Data.TargetPorts = result;
                     }
                     _targetPorts = value;
-                    RaisePropertyChanged(() => TargetPorts);
+                    OnPropertyChanged(nameof(TargetPorts));                    
                     OkCommand.RaiseCanExecuteChanged();
                 }
                 catch

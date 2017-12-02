@@ -5,7 +5,8 @@
     using System.ComponentModel;
     using System.Linq;
 
-    using cfUtils.Logic.Wpf.MvvmLight;
+    using devdeer.DoctorFlox.Logic.Wpf;
+    using devdeer.DoctorFlox.Logic.Wpf.Commands;
 
     using Logic;
 
@@ -20,7 +21,7 @@
         /// <inheritdoc />
         protected override void InitCommands()
         {
-            AddPortCommand = new AutoRelayCommand(
+            AddPortCommand = new RelayCommand(
                 () =>
                 {
                     if (SelectedPort == null)
@@ -31,6 +32,13 @@
                 },
                 () => SelectedPort != null);
             base.InitCommands();
+        }
+
+        /// <inheritdoc />
+        protected override void InitData()
+        {
+            KnownPorts = new BindingList<PortModel>(Variables.KnownPorts?.Where(p => p.Tcp == Variables.CurrentSelectedJob.Tcp).ToList() ?? new List<PortModel>());
+            base.InitData();
         }
 
         /// <inheritdoc />
@@ -50,18 +58,11 @@
             base.InitDesignTimeData();
         }
 
-        /// <inheritdoc />
-        protected override void InitRuntimeData()
-        {
-            KnownPorts = new BindingList<PortModel>(Variables.KnownPorts?.Where(p => p.Tcp == Variables.CurrentSelectedJob.Tcp).ToList() ?? new List<PortModel>());
-            base.InitRuntimeData();
-        }
-
         #endregion
 
         #region properties
 
-        public AutoRelayCommand AddPortCommand { get; private set; }
+        public RelayCommand AddPortCommand { get; private set; }
 
         public BindingList<PortModel> KnownPorts { get; private set; }
 

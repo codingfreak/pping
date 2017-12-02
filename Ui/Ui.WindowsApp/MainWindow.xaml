@@ -7,7 +7,7 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:Controls="clr-namespace:codingfreaks.pping.Ui.WindowsApp.Controls"
-    xmlns:Converters="clr-namespace:codingfreaks.cfUtils.Logic.Wpf.Converters;assembly=cfUtils.cfWpfUtils"
+    xmlns:Commands="clr-namespace:devdeer.DoctorFlox.Logic.Wpf.Commands;assembly=DoctorFlox.Logic.Wpf"
     x:Name="window" x:Class="codingfreaks.pping.Ui.WindowsApp.MainWindow"
     mc:Ignorable="d"
     Title="{Binding Title}" 
@@ -21,7 +21,7 @@
     WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <Converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <xctk:InverseBoolConverter x:Key="InverseBoolConverter" />
         <Style TargetType="{x:Type Button}" x:Key="GridButton">
             <Setter Property="Padding" Value="2" />
             <Setter Property="Width" Value="32" />
@@ -109,11 +109,8 @@
     </Window.IsEnabled>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
-            <Command:EventToCommand Command="{Binding ClosingCommand, Mode=OneWay}" />
+            <Commands:EventToCommand Command="{Binding ClosingCommand, Mode=OneWay}" />
         </i:EventTrigger>
-        <!--<i:EventTrigger EventName="Loaded">
-            <Command:EventToCommand Command="{Binding LoadedCommand, Mode=OneWay}" />
-        </i:EventTrigger>-->
     </i:Interaction.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>

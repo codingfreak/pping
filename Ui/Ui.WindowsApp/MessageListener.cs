@@ -4,8 +4,8 @@
     using System.Linq;
     using System.Windows;
 
-    using GalaSoft.MvvmLight.Messaging;
-
+    using devdeer.DoctorFlox.Logic.Wpf.Messages;
+    
     using Logic;
 
     using Messages;
@@ -27,16 +27,16 @@
 
         public MessageListener()
         {
-            Messenger.Default.Register<AddJobWindowOpenMessage>(
-                this,
-                m =>
-                {
-                    var form = new AddJobWindow
-                    {
-                        Owner = GetWindow(typeof(MainWindow))
-                    };
-                    form.ShowDialog();
-                });
+            //Messenger.Default.Register<AddJobWindowOpenMessage>(
+            //    this,
+            //    m =>
+            //    {
+            //        var form = new AddJobWindow
+            //        {
+            //            Owner = GetWindow(typeof(MainWindow))
+            //        };
+            //        form.ShowDialog();
+            //    });
             Messenger.Default.Register<JobAddedMessage>(
                 this,
                 m =>
@@ -50,22 +50,22 @@
                     }
                     ctx.AddJob(m.NewJob);
                 });
-            Messenger.Default.Register<ShowPortWindowMessage>(
-                this,
-                m =>
-                {
-                    var form = new AddPortWindow
-                    {
-                        Owner = GetWindow(m.ViewModelType)
-                    };
-                    form.Closed += (s, e) =>
-                    {
-                        Variables.AddPortWindow = null;
-                        Messenger.Default.Send(new PortWindowClosedMessage());
-                    };
-                    Variables.AddPortWindow = form;
-                    form.ShowDialog();                    
-                });
+            //Messenger.Default.Register<ShowPortWindowMessage>(
+            //    this,
+            //    m =>
+            //    {
+            //        var form = new AddPortWindow
+            //        {
+            //            Owner = GetWindow(m.ViewModelType)
+            //        };
+            //        form.Closed += (s, e) =>
+            //        {
+            //            Variables.AddPortWindow = null;
+            //            Messenger.Default.Send(new PortWindowClosedMessage());
+            //        };
+            //        Variables.AddPortWindow = form;
+            //        form.ShowDialog();                    
+            //    });
         }
 
         #endregion
