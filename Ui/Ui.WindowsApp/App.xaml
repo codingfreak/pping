@@ -1,0 +1,13 @@
+﻿<Application x:Class="codingfreaks.pping.Ui.WindowsApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d1p1:Ignorable="d"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:codingfreaks.pping.Ui.WindowsApp"
+             xmlns:helper="clr-namespace:codingfreaks.pping.Ui.WindowsApp.Helpers"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <helper:ViewModelLocator x:Key="Locator" d:IsDataSource="true" />
+    </Application.Resources>
+</Application>
