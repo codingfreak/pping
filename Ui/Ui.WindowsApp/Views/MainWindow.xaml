@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:codingfreaks.pping.Ui.WindowsApp.Views"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="350" Width="525"
-        DataContext="{Binding MainViewModel, Source={StaticResource Locator}}">
+        Title="{Binding Title}" Height="343.902" Width="551.829"
+        DataContext="{Binding MainViewModel, Source={StaticResource Locator}}" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+
     </Grid>
 </Window>
