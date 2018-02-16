@@ -8,6 +8,5 @@
         Title="{Binding Title}" Height="343.902" Width="551.829"
         DataContext="{Binding MainViewModel, Source={StaticResource Locator}}" WindowStartupLocation="CenterScreen">
     <Grid>
-
     </Grid>
 </Window>

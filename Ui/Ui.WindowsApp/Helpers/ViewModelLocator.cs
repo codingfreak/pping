@@ -5,6 +5,8 @@
 
     using Autofac;
 
+    using devdeer.DoctorFlox;
+
     using ViewModels;
 
     /// <summary>
@@ -17,7 +19,7 @@
         /// <summary>
         /// Returns a fresh instance of a main view model.
         /// </summary>
-        public MainViewModel MainViewModel => Variables.AutoFacContainer.Resolve<MainViewModel>();
+        public MainViewModel MainViewModel => BaseViewModel.IsInDesignModeStatic ? new MainViewModel() : Variables.AutoFacContainer.Resolve<MainViewModel>();
 
         #endregion
     }
