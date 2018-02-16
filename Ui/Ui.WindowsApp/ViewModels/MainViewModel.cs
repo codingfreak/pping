@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Reflection;
     using System.Threading;
 
     using devdeer.DoctorFlox;
@@ -32,7 +33,22 @@
 
         #region properties
 
-        public string Title => "pping";
+        /// <summary>
+        /// The title of the main window.
+        /// </summary>
+        public string Title => $"[codingfreaks] pping {Version}";
+
+        /// <summary>
+        /// Retrieves the version of the current assembly in the format [MAJOR].[MINOR].[BUILD].
+        /// </summary>
+        public string Version
+        {
+            get
+            {
+                var version = Assembly.GetExecutingAssembly().GetName().Version;
+                return $"{version.Major}.{version.Minor}.{version.Build}";
+            }
+        }
 
         #endregion
     }
