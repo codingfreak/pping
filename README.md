@@ -7,12 +7,15 @@ pping is designed to give you the easiest possible solution for discovering port
 
 ## Implementation
 
-pping is developed using Microsoft .NET Framework version 4.6. It's delivered in the form of a copy-&-paste-deployment meaning that you just need 3 files in a single folder to be able to start it.
+pping is developed using Microsoft .NET Core version 3.1. pping uses logic from our package [cfUtils](https://github.com/codingfreak/cfUtils).
 
-pping uses 2 libraries (dll) from the codingfreasks-project [cfUtils](https://github.com/codingfreak/cfUtils):
-- cfUtils.cfBaseUtils.dll
-- cfUtils.cfPortableUtils.dll
-The 4rd file you need in the folder is pping.exe.
+## Installation
+
+The easiest way to get pping running on your machine is to use chocolatey and install it
+
+    choco install pping
+
+Alternativeley you can simply download the 7z-package from [codingfreaks.de](https://codingfreaks.de/tools) and unzip the files in any directory. It will make sense to add this directory to your PATH variable.
 
 ## Basic usage
 
@@ -100,15 +103,15 @@ The following table lists all available options:
 
 | Abbreviation  | Full name                 | Sample            | Purpose
 |:---           |:---                       |:---               |:---
-| a             | address                   | -a=google.com     | The address to perform the pping to (can be omitted by specifying it after the command itself).
-| p             | port                      | -p=80,443         | The comma-separated list or range of ports to pping to (can be omitted by specifying it after the address).
 | t             | endless                   | -t                | Perform a constant pping.
-| r             | repeats                   | -r=10             | Number of repeats in a non-endless pping (defaults to 4)
-| tim           | timeout                   | -tim=2            | Timeout in seconds (defaults to 1)
+| r             | repeats                   | -r 10             | Number of repeats in a non-endless pping (defaults to 4)
+| tim           | timeout                   | -tim 2            | Timeout in seconds (defaults to 1)
 | l             | logo                      | -logo             | If provided, pping will print detailed header informations.
 | res           | resolve                   | -res              | If provided, pping will resolve the IP address for each pping.
-| as            | autostop                  | -as               | If provided, pping will stop operation on the first opened port.
-| elsc          | elsucesscount             | -elsc             | If provided, the process will retrieve the amount of opened ports as the process-result to DOS.
-| elf           | elflag                    | -elf              | If provided, the process will return 0 if there was at least one open port, otherwise it returns 1.
-| w             | waittime                  | -w=2000           | The amount of milliseconds to wait between 2 ppings.
-| d             | details                   | -d                | If provided, pping will try to write reason details at closed ports to te console.
+| a             | autostop                  | -a                | If provided, pping will stop operation on the first opened port.
+| els           | elsucc                    | -els              | If provided, the process will retrieve the amount of opened ports as the process-result to DOS.
+| elf           | elfail                    | -elf              | If provided, the process will return 0 if there was at least one open port, otherwise it returns 1.
+| w             | waittime                  | -w 2000           | The amount of milliseconds to wait between 2 ppings.
+| d             | detailed                  | -d                | If provided, pping will try to write reason details at closed ports to te console.
+| 4             | ipv4                      | -4                | If provided, pping will use IPv4 for resolutions.
+| 6             | ipv6                      | -6                | If provided, pping will use IPv6 for resolutions.
