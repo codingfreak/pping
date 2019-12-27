@@ -2,27 +2,27 @@
 {
     using System;
     using System.Linq;
-    using System.Reflection;
-    using System.Threading.Tasks;
 
     using McMaster.Extensions.CommandLineUtils;
 
-    using Microsoft.Extensions.Hosting;
-
-    
+    /// <summary>
+    /// Main entry point of the console application.
+    /// </summary>
     [HelpOption]
-    [VersionOptionFromMember(MemberName = "GetVersion")]
     [Subcommand(typeof(PingLogic))]
     internal class Program
     {
         #region methods
 
-        private string GetVersion()
+        /// <summary>
+        /// Main entry point of the application.
+        /// </summary>
+        /// <param name="args">Command line arguments.</param>
+        /// <returns>The result of the program.</returns>
+        public static int Main(string[] args)
         {
-            return typeof(Program).Assembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            return CommandLineApplication.Execute<PingLogic>(args);
         }
-
-        public static int Main(string[] args) => CommandLineApplication.Execute<PingLogic>(args);
 
         #endregion
     }

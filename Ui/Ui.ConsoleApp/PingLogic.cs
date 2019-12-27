@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Sockets;
+    using System.Reflection;
     using System.Threading.Tasks;
 
     using cfUtils.Logic.Core.Extensions;
@@ -13,10 +14,26 @@
 
     using McMaster.Extensions.CommandLineUtils;
 
+    /// <summary>
+    /// Contains the logic to perform when the console app is started.
+    /// </summary>
+    /// <remarks>
+    /// This type is passed to the console app as the runnable command-line-app.
+    /// </remarks>
     [Command(Name = "pping", Description = "A port availability checker.")]
+    [VersionOptionFromMember(MemberName = "GetVersion")]
     public class PingLogic
     {
         #region methods
+
+        /// <summary>
+        /// Is used by the <see cref="VersionOptionAttribute" /> to retrieve the SemVer-version of this assembly.
+        /// </summary>
+        /// <returns>The SemVer-styled version of the assembly.</returns>
+        private string GetVersion()
+        {
+            return typeof(Program).Assembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+        }
 
         /// <summary>
         /// Gets called by the logic of the <see cref="CommandAttribute" />.
@@ -105,47 +122,89 @@
 
         #region properties
 
+        /// <summary>
+        /// If set, the app will stop working when it gets one OPEN-result.
+        /// </summary>
         [Option("-a|--autostop", CommandOptionType.NoValue, Description = "If set, the app will stop working when it gets one OPEN-result.")]
         public bool AutoStop { get; set; }
 
-        [Option("-4|--ipv4", CommandOptionType.NoValue, Description = "If set, the app will use IPv4 for resolutions.")]
-        public bool UseIpV4 { get; set; } = true;
-
-        [Option("-6|--ipv6", CommandOptionType.NoValue, Description = "If set, the app will use IPv6 for resolutions.")]
-        public bool UseIpV6 { get; set; }
-
+        /// <summary>
+        /// If set, the app will output some more detailled states.
+        /// </summary>
         [Option("-d|--detailed", CommandOptionType.NoValue, Description = "If set, the app will output some more detailled states.")]
         public bool Detailed { get; set; }
 
+        /// <summary>
+        /// If set, the app will run infinitely. (see -as option).
+        /// </summary>
         [Option("-t|--endless", CommandOptionType.NoValue, Description = "If set, the app will run infinitely. (see -as option).")]
         public bool Endless { get; set; }
 
+        /// <summary>
+        /// The IP address or DNS name of the host to scan.
+        /// </summary>
         [Required]
         [Argument(0, Name = "Host", Description = "The IP address or DNS name of the host to scan.")]
         public string Host { get; set; }
 
+        /// <summary>
+        /// The port(s) to scan. Use '-' to specify a range of ports or list ports by separating them with ','.
+        /// </summary>
         [Required]
         [Argument(1, Name = "Port(s)", Description = "The port(s) to scan. Use '-' to specify a range of ports or list ports by separating them with ','.")]
         public string PortRange { get; set; }
 
+        /// <summary>
+        /// Defines the amount of requests which will be sent to the target (default is 4).
+        /// </summary>
         [Option("-r|--repeats", CommandOptionType.SingleValue, Description = "Defines the amount of requests which will be sent to the target (default is 4).")]
         public int Repeats { get; set; } = 4;
 
+        /// <summary>
+        /// If set, the app will return error level 0 on any open ping and error level 1 if all pings resulted in closed port.
+        /// </summary>
         [Option("-elf|--elfail", CommandOptionType.NoValue, Description = "If set, the app will return error level 0 on any open ping and error level 1 if all pings resulted in closed port.")]
         public bool ReportFailedOnExit { get; set; }
 
+        /// <summary>
+        /// If set, the app will return error level 0 on any open ping and error level 1 if all pings resulted in closed port.
+        /// </summary>
         [Option("-els|--elsucc", CommandOptionType.NoValue, Description = "If set, the app will return error level 0 on any open ping and error level 1 if all pings resulted in closed port.")]
         public bool ReportSucceededOnExit { get; set; }
 
+        /// <summary>
+        /// If set, the app will resolve the DNS name of the target.
+        /// </summary>
         [Option("-res|--resolve", CommandOptionType.NoValue, Description = "If set, the app will resolve the DNS name of the target.")]
         public bool ResvoleAddress { get; set; }
 
+        /// <summary>
+        /// Defines the timeout in seconds the app will wait for requests to return.
+        /// </summary>
         [Option("-tim|--timout", CommandOptionType.SingleValue, Description = "Defines the timeout in seconds the app will wait for requests to return.")]
         public int Timeout { get; set; } = 1;
 
+        /// <summary>
+        /// If set, the app will use IPv4 for resolutions.
+        /// </summary>
+        [Option("-4|--ipv4", CommandOptionType.NoValue, Description = "If set, the app will use IPv4 for resolutions.")]
+        public bool UseIpV4 { get; set; } = true;
+
+        /// <summary>
+        /// If set, the app will use IPv6 for resolutions.
+        /// </summary>
+        [Option("-6|--ipv6", CommandOptionType.NoValue, Description = "If set, the app will use IPv6 for resolutions.")]
+        public bool UseIpV6 { get; set; }
+
+        /// <summary>
+        /// If set, a UDP ping will be performed.
+        /// </summary>
         [Option("-u|--udp", CommandOptionType.NoValue, Description = "If set, a UDP ping will be performed.")]
         public bool UseUdp { get; set; }
 
+        /// <summary>
+        /// Defines a time in milliseconds to wait before the first call is made. Defaults to 500.
+        /// </summary>
         [Option("-w|--wait", CommandOptionType.SingleValue, Description = "Defines a time in milliseconds to wait before the first call is made. Defaults to 500.")]
         public int WaitTime { get; set; } = 500;
 
@@ -188,7 +247,7 @@
         }
 
         /// <summary>
-        /// Returns 'UDP' or 'TCP' depending on the setting in <see cref="UseUdp"/>.
+        /// Returns 'UDP' or 'TCP' depending on the setting in <see cref="UseUdp" />.
         /// </summary>
         private string ResolvedProtocol => UseUdp ? "UDP" : "TCP";
 
