@@ -2,15 +2,27 @@
 {
     using System;
     using System.Linq;
+    using System.Reflection;
+    using System.Threading.Tasks;
 
+    using McMaster.Extensions.CommandLineUtils;
+
+    using Microsoft.Extensions.Hosting;
+
+    
+    [HelpOption]
+    [VersionOptionFromMember(MemberName = "GetVersion")]
+    [Subcommand(typeof(PingLogic))]
     internal class Program
     {
         #region methods
 
-        private static void Main(string[] args)
+        private string GetVersion()
         {
-            Console.WriteLine("Hello World!");
+            return typeof(Program).Assembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
         }
+
+        public static int Main(string[] args) => CommandLineApplication.Execute<PingLogic>(args);
 
         #endregion
     }
