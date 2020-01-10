@@ -18,6 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="verification.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="pping.nuspec">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

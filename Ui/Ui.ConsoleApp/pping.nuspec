@@ -21,5 +21,6 @@
   <files>
     <file src="*.exe" target="tools" />
     <file src="*.dll" target="tools" />
+    <file src="*.txt" target="tools" />
   </files>
 </package>

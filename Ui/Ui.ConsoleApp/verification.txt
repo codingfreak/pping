@@ -1,0 +1,10 @@
+﻿VERIFICATION
+Verification is intended to assist the Chocolatey moderators and community
+in verifying that this package's contents are trustworthy.
+
+This package uses the following dependencies:
+- Microsoft .NET Core 3.1 Framework in the form of all needed dependencies.
+- NuGet packages (all of whom are free to use in our software):
+    - codingfreaks.libs.Utilities
+    - McMaster.Extensions.CommandLineUtils
+    - Mircosoft.Extensions.Hosting
