@@ -21,7 +21,9 @@
         /// <returns>The result of the program.</returns>
         public static int Main(string[] args)
         {
-            return CommandLineApplication.Execute<PingLogic>(args);
+            var result = CommandLineApplication.Execute<PingLogic>(args);
+            Environment.ExitCode = result;
+            return result;
         }
 
         #endregion
