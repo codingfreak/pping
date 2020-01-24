@@ -2,9 +2,17 @@
 Verification is intended to assist the Chocolatey moderators and community
 in verifying that this package's contents are trustworthy.
 
+This package delivers 2 binary files:
+
+- pping.exe (SHA256: 403F3A7B60BCD74B024D7281E8AA2BB8F57CC1D3E64664AC9D751512B08D56D3)
+- pping.dll (SHA256: 5DFE2DDABF12792BE5549CD8C0D9E4931032BFAC514DBED9FF4BF2E969F9F1E0)
+
+The hashes where optained using PowerShell CmdLet `Get-FileHash`.
+
 This package uses the following dependencies:
-- Microsoft .NET Core 3.1 Framework in the form of all needed dependencies.
+
+- Microsoft .NET Core 3.1 Framework -> MIT License (https://github.com/dotnet/core/blob/master/LICENSE.TXT)
 - NuGet packages (all of whom are free to use in our software):
-    - codingfreaks.libs.Utilities
-    - McMaster.Extensions.CommandLineUtils
-    - Mircosoft.Extensions.Hosting
+    - codingfreaks.libs.Utilities -> Apache License 2 (https://github.com/codingfreak/cfUtils/blob/master/LICENSE)
+    - Microsoft.Extensions.* -> Apache License 2 (https://github.com/dotnet/extensions/blob/master/LICENSE.txt) 
+    - McMaster.Extensions.CommandLineUtils -> Apache License 2 (https://github.com/natemcmaster/CommandLineUtils/blob/master/LICENSE.txt)
