@@ -4,7 +4,7 @@ in verifying that this package's contents are trustworthy.
 
 This package delivers 2 binary files:
 
-- pping.exe (SHA256: AED35829E80682892F37491288FA4B8FED573D3B3B6EABEC6A59E2F0CC4A4EFA)
+- pping.exe (SHA256: BE6926673B30582266D002D327EF3CAA0071D995CF0C00DFCC0C3EAB2D334F4F)
 - pping.dll (SHA256: 43F90DF2C009E259AF26A2349B80488E271FF657850466D3902EDA7FA9F9FD6D)
 
 The hashes where optained using PowerShell CmdLet `Get-FileHash`.
