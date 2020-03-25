@@ -1,6 +1,55 @@
-Follow these instruction in order to update the chocolaty package:
+You can perform all the steps in this file by simply `executing publish-choco-win64.ps1` in the project folder. Be 
+aware that before doing so you must:
 
-    dotnet build -c Release
-    cd bin\Release\netcoreapp3.1
-    choco pack
-    choco push pping.2.0.0.nupkg
+1. Increase the version number in the csproj.
+2. Increase the version number in the nuspec.
+3. Add releaseNotes in the nuspec.
+
+# Generate self-contained EXE for Windows x64
+
+1. Open the Ui.Console folder in a PowerShell command prompt on Windows.
+2. Execute the dotnet publish command for self-contained EXE and Windows:
+
+    ```
+    dotnet publish -r win-x64 -c Release
+    ```
+
+3. Calculate the new Hash:
+
+    ```
+    $hash = Get-FileHash .\bin\Release\netcoreapp3.1\win-x64\publish\pping.exe | Select -ExpandProperty Hash 
+    ```
+
+4. Replace property in verification.txt:
+   
+    ```
+    (Get-Content verification.txt) -replace '- pping.exe \(SHA256: (.*)', "- pping.exe (SHA256: $hash)" | Out-File verification.txt
+    ```
+
+5. Copy additional files to publish-folder:
+
+    ```
+    cp pping.nuspec .\bin\Release\netcoreapp3.1\win-x64\publish\pping.nuspec
+    cp verification.txt .\bin\Release\netcoreapp3.1\win-x64\publish\verification.txt
+    cp license.txt .\bin\Release\netcoreapp3.1\win-x64\publish\license.txt
+    ```
+
+6. Generate choco package:
+
+    ```
+    choco pack .\bin\Release\netcoreapp3.1\win-x64\publish\pping.nuspec --output-directory .\bin\Release\netcoreapp3.1\win-x64\publish\
+    ```
+
+7. Get version out of nuspec:
+
+    ```
+    $xmlFile = ".\bin\Release\netcoreapp3.1\win-x64\publish\pping.nuspec"
+    [XML]$xml = Get-Content $xmlFile
+    $version = $xml.package.metadata.version
+    ```
+
+8. Push choco:
+
+    ```
+    choco push .\bin\Release\netcoreapp3.1\win-x64\publish\pping.$version.nupkg
+    ```
