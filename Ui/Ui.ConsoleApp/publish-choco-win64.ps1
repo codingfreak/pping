@@ -16,3 +16,7 @@ $xmlFile = ".\bin\Release\netcoreapp3.1\win-x64\publish\pping.nuspec"
 $version = $xml.package.metadata.version
 # push package to choco
 choco push .\bin\Release\netcoreapp3.1\win-x64\publish\pping.$version.nupkg
+# commit and push changea to verification txt
+git add .\verification.txt
+git commit -m "Changed verfication hash due to build"
+git push
