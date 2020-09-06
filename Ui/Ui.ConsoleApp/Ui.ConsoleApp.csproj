@@ -6,18 +6,19 @@
     <RootNamespace>codingfreaks.pping.Ui.ConsoleApp</RootNamespace>
     <AssemblyName>pping</AssemblyName>
     <Authors>codingfreaks</Authors>
-    <Version>2.0.4</Version>
+    <Version>2.0.5</Version>
     <Copyright>codingfreaks 2013-2020</Copyright>
     <LangVersion>latest</LangVersion>
     <PublishTrimmed>true</PublishTrimmed>
     <PublishReadyToRun>true</PublishReadyToRun>
     <PublishSingleFile>true</PublishSingleFile>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="codingfreaks.libs.Utilities" Version="2.0.3" />
-    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.4.4" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.0" />
+    <PackageReference Include="codingfreaks.libs.Utilities" Version="2.0.4" />
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.7" />
   </ItemGroup>
 
   <ItemGroup>

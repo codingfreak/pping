@@ -68,11 +68,11 @@
             {
                 var portOpen = true;
                 Ports.ToList().ForEach(
-                    port =>
+                    async port =>
                     {
                         try
                         {
-                            portOpen &= NetworkUtil.IsPortOpened(Host, port, Timeout, UseUdp);
+                            portOpen &= await NetworkUtil.IsPortOpenedAsync(Host, port, Timeout, UseUdp).ConfigureAwait(false);
                             reachablePorts += portOpen ? 1 : 0;
                             closedPorts += portOpen ? 0 : 1;
                             var printResult = portOpen ? "OPEN" : "CLOSED";

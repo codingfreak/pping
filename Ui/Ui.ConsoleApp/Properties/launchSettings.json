@@ -2,7 +2,7 @@
   "profiles": {
     "Ui.ConsoleApp": {
       "commandName": "Project",
-      "commandLineArgs": "google.de 443 -res -6"
+      "commandLineArgs": "google.de 443 -u"
     }
   }
 }
