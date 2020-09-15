@@ -6,13 +6,9 @@
     <RootNamespace>codingfreaks.pping.Ui.ConsoleApp</RootNamespace>
     <AssemblyName>pping</AssemblyName>
     <Authors>codingfreaks</Authors>
-    <Version>2.0.5</Version>
+    <Version>2.0.6</Version>
     <Copyright>codingfreaks 2013-2020</Copyright>
-    <LangVersion>latest</LangVersion>
-    <PublishTrimmed>true</PublishTrimmed>
-    <PublishReadyToRun>true</PublishReadyToRun>
-    <PublishSingleFile>true</PublishSingleFile>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <LangVersion>latest</LangVersion>  
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,9 +1,11 @@
 # Execute the dotnet publish command for self-contained EXE and Windows
 dotnet publish -r win-x64 -c Release /p:PublishSingleFile=true
 # Calculate the new Hash:
-$hash = Get-FileHash .\bin\Release\netcoreapp3.1\win-x64\publish\pping.exe | Select -ExpandProperty Hash
+$hashExe = Get-FileHash .\bin\Release\netcoreapp3.1\win-x64\publish\pping.exe | Select -ExpandProperty Hash
+$hashDll = Get-FileHash .\bin\Release\netcoreapp3.1\win-x64\publish\pping.dll | Select -ExpandProperty Hash
 # Replace hash in verification.txt
-(Get-Content verification.txt) -replace '- pping.exe \(SHA256: (.*)', "- pping.exe (SHA256: $hash)" | Out-File verification.txt
+(Get-Content verification.txt) -replace '- pping.exe \(SHA256: (.*)', "- pping.exe (SHA256: $hashExe)" | Out-File verification.txt
+(Get-Content verification.txt) -replace '- pping.dll \(SHA256: (.*)', "- pping.dll (SHA256: $hashDll)" | Out-File verification.txt
 # copy files to publish-folder for packing
 cp pping.nuspec .\bin\Release\netcoreapp3.1\win-x64\publish\pping.nuspec
 cp verification.txt .\bin\Release\netcoreapp3.1\win-x64\publish\verification.txt

@@ -11,19 +11,21 @@ aware that before doing so you must:
 2. Execute the dotnet publish command for self-contained EXE and Windows:
 
     ```
-    dotnet publish -r win-x64 -c Release
+    dotnet publish -c Release
     ```
 
 3. Calculate the new Hash:
 
     ```
-    $hash = Get-FileHash .\bin\Release\netcoreapp3.1\win-x64\publish\pping.exe | Select -ExpandProperty Hash 
+    $hashExe = Get-FileHash .\bin\Release\netcoreapp3.1\publish\pping.exe | Select -ExpandProperty Hash 
+    $hashDll = Get-FileHash .\bin\Release\netcoreapp3.1\publish\pping.dll | Select -ExpandProperty Hash 
     ```
 
 4. Replace property in verification.txt:
    
     ```
-    (Get-Content verification.txt) -replace '- pping.exe \(SHA256: (.*)', "- pping.exe (SHA256: $hash)" | Out-File verification.txt
+    (Get-Content verification.txt) -replace '- pping.exe \(SHA256: (.*)', "- pping.exe (SHA256: $hashExe)" | Out-File verification.txt
+    (Get-Content verification.txt) -replace '- pping.dll \(SHA256: (.*)', "- pping.exe (SHA256: $hashDll)" | Out-File verification.txt
     ```
 
 5. Copy additional files to publish-folder:
