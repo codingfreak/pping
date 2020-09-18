@@ -34,6 +34,7 @@ aware that before doing so you must:
     cp pping.nuspec .\bin\Release\netcoreapp3.1\win-x64\publish\pping.nuspec
     cp verification.txt .\bin\Release\netcoreapp3.1\win-x64\publish\verification.txt
     cp license.txt .\bin\Release\netcoreapp3.1\win-x64\publish\license.txt
+    cp pping.runtimeconfig.json .\bin\Release\netcoreapp3.1\win-x64\publish\pping.runtimeconfig.json
     ```
 
 6. Generate choco package:

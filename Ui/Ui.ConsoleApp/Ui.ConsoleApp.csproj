@@ -6,7 +6,7 @@
     <RootNamespace>codingfreaks.pping.Ui.ConsoleApp</RootNamespace>
     <AssemblyName>pping</AssemblyName>
     <Authors>codingfreaks</Authors>
-    <Version>2.0.6</Version>
+    <Version>2.0.7</Version>
     <Copyright>codingfreaks 2013-2020</Copyright>
     <LangVersion>latest</LangVersion>  
   </PropertyGroup>
