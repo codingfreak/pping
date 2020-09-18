@@ -11,7 +11,6 @@ $hashDll = Get-FileHash $folder\pping.dll | Select -ExpandProperty Hash
 cp pping.nuspec $folder\pping.nuspec
 cp verification.txt $folder\verification.txt
 cp license.txt $folder\license.txt
-cp pping.runtimeconfig.json $folder\pping.runtimeconfig.json
 # pack choco package
 choco pack $folder\pping.nuspec --output-directory $folder\
 # read current version from nuspec

@@ -22,5 +22,6 @@
     <file src="*.exe" target="tools" />
     <file src="*.dll" target="tools" />
     <file src="*.txt" target="tools" />
+    <file src="*.runtimeconfig.json" target="tools" />
   </files>
 </package>
