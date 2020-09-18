@@ -14,7 +14,7 @@ cp license.txt $folder\license.txt
 # pack choco package
 choco pack $folder\pping.nuspec --output-directory $folder\
 # read current version from nuspec
-$xmlFile =  $folder + "pping.nuspec"
+$xmlFile =  $folder + "\pping.nuspec"
 [XML]$xml = Get-Content $xmlFile
 $version = $xml.package.metadata.version
 # push package to choco
