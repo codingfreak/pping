@@ -103,15 +103,15 @@ The following table lists all available options:
 
 | Abbreviation  | Full name                 | Sample            | Purpose
 |:---           |:---                       |:---               |:---
-| t             | endless                   | -t                | Perform a constant pping.
+| t             | endless                   | -t                | If set, the app will run infinitely. (see -a option).
 | r             | repeats                   | -r 10             | Number of repeats in a non-endless pping (defaults to 4)
-| tim           | timeout                   | -tim 2            | Timeout in seconds (defaults to 1)
+| tim           | timeout                   | -tim 2            | Defines the timeout in seconds the app will wait for each requests to return.
 | l             | logo                      | -logo             | If provided, pping will print detailed header informations.
 | res           | resolve                   | -res              | If provided, pping will resolve the IP address for each pping.
-| a             | autostop                  | -a                | If provided, pping will stop operation on the first opened port.
-| els           | elsucc                    | -els              | If provided, the process will retrieve the amount of opened ports as the process-result to DOS.
-| elf           | elfail                    | -elf              | If provided, the process will return 0 if there was at least one open port, otherwise it returns 1.
-| w             | waittime                  | -w 2000           | The amount of milliseconds to wait between 2 ppings.
+| a             | autostop                  | -a                | If set, the app will stop working when it gets the first OPEN-result.
+| els           | elsucc                    | -els              | If set, the app will return the amount of successful port requests as the result code.
+| elf           | elfail                    | -elf              | If set, the app will return error level 0 on any open ping and error level 1 if all pings resulted in closed port.
+| w             | waittime                  | -w 2000           | Defines a time in milliseconds to wait between calls. Defaults to 1000.
 | d             | detailed                  | -d                | If provided, pping will try to write reason details at closed ports to te console.
 | 4             | ipv4                      | -4                | If provided, pping will use IPv4 for resolutions.
 | 6             | ipv6                      | -6                | If provided, pping will use IPv6 for resolutions.

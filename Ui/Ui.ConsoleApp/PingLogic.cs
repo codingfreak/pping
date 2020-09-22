@@ -123,9 +123,9 @@
         #region properties
 
         /// <summary>
-        /// If set, the app will stop working when it gets one OPEN-result.
+        /// If set, the app will stop working when it gets the first OPEN-result.
         /// </summary>
-        [Option("-a|--autostop", CommandOptionType.NoValue, Description = "If set, the app will stop working when it gets one OPEN-result.")]
+        [Option("-a|--autostop", CommandOptionType.NoValue, Description = "If set, the app will stop working when it gets the first OPEN-result.")]
         public bool AutoStop { get; set; }
 
         /// <summary>
@@ -135,9 +135,9 @@
         public bool Detailed { get; set; }
 
         /// <summary>
-        /// If set, the app will run infinitely. (see -as option).
+        /// If set, the app will run infinitely. (see -a option).
         /// </summary>
-        [Option("-t|--endless", CommandOptionType.NoValue, Description = "If set, the app will run infinitely. (see -as option).")]
+        [Option("-t|--endless", CommandOptionType.NoValue, Description = "If set, the app will run infinitely. (see -a option).")]
         public bool Endless { get; set; }
 
         /// <summary>
@@ -167,9 +167,9 @@
         public bool ReportFailedOnExit { get; set; }
 
         /// <summary>
-        /// If set, the app will return error level 0 on any open ping and error level 1 if all pings resulted in closed port.
+        /// If set, the app will return the amount of successful port requests as the result code.
         /// </summary>
-        [Option("-els|--elsucc", CommandOptionType.NoValue, Description = "If set, the app will return error level 0 on any open ping and error level 1 if all pings resulted in closed port.")]
+        [Option("-els|--elsucc", CommandOptionType.NoValue, Description = "If set, the app will return the amount of successful port requests as the result code.")]
         public bool ReportSucceededOnExit { get; set; }
 
         /// <summary>
@@ -179,9 +179,9 @@
         public bool ResvoleAddress { get; set; }
 
         /// <summary>
-        /// Defines the timeout in seconds the app will wait for requests to return.
+        /// Defines the timeout in seconds the app will wait for each requests to return.
         /// </summary>
-        [Option("-tim|--timout", CommandOptionType.SingleValue, Description = "Defines the timeout in seconds the app will wait for requests to return.")]
+        [Option("-tim|--timout", CommandOptionType.SingleValue, Description = "Defines the timeout in seconds the app will wait for each requests to return.")]
         public int Timeout { get; set; } = 1;
 
         /// <summary>
@@ -203,10 +203,10 @@
         public bool UseUdp { get; set; }
 
         /// <summary>
-        /// Defines a time in milliseconds to wait before the first call is made. Defaults to 500.
+        /// Defines a time in milliseconds to wait between calls. Defaults to 1000.
         /// </summary>
-        [Option("-w|--wait", CommandOptionType.SingleValue, Description = "Defines a time in milliseconds to wait before the first call is made. Defaults to 500.")]
-        public int WaitTime { get; set; } = 500;
+        [Option("-w|--wait", CommandOptionType.SingleValue, Description = "Defines a time in milliseconds to wait between calls. Defaults to 1000.")]
+        public int WaitTime { get; set; } = 1000;
 
         /// <summary>
         /// Scans the <see cref="PortRange" /> property and interpretes it's value as a single number, a number range or a
