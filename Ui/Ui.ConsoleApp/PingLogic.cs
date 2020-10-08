@@ -66,33 +66,33 @@
             var currentPack = 0;
             for (var i = 0; i < Repeats; ++i)
             {
-                var portOpen = true;
-                Ports.ToList().ForEach(
-                    async port =>
+                var allPortsOpen = true;
+                foreach (var port in Ports)
+                {
+                    try
                     {
-                        try
+                        var portOpen = NetworkUtil.IsPortOpened(Host, port, Timeout, UseUdp);
+                        allPortsOpen &= portOpen;
+                        reachablePorts += portOpen ? 1 : 0;
+                        closedPorts += portOpen ? 0 : 1;
+                        var printResult = portOpen ? "OPEN" : "CLOSED";
+                        if (Detailed && !portOpen)
                         {
-                            portOpen &= await NetworkUtil.IsPortOpenedAsync(Host, port, Timeout, UseUdp).ConfigureAwait(false);
-                            reachablePorts += portOpen ? 1 : 0;
-                            closedPorts += portOpen ? 0 : 1;
-                            var printResult = portOpen ? "OPEN" : "CLOSED";
-                            if (Detailed && !portOpen)
-                            {
-                                printResult += $" ({NetworkUtil.LastCheckResult.ToString()})";
-                            }
-                            Console.Write("#{0,4} -> Pinging host {1} (IP:{2}) on {5} port {3} with timeout {4}: ", ++currentPack, Host, hostIp, port, Timeout, ResolvedProtocol);
-                            Console.ForegroundColor = portOpen ? ConsoleColor.DarkGreen : ConsoleColor.DarkRed;
-                            Console.WriteLine(printResult);
-                            Console.ResetColor();
+                            printResult += $" ({NetworkUtil.LastCheckResult.ToString()})";
                         }
-                        catch (Exception ex)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine($"#{++currentPack,4} Error pinging host {Host}: {ex.Message}");
-                            Console.ResetColor();
-                        }
-                    });
-                if (!AutoStop || !portOpen)
+                        Console.Write("#{0,4} -> Pinging host {1} (IP:{2}) on {5} port {3} with timeout {4}: ", ++currentPack, Host, hostIp, port, Timeout, ResolvedProtocol);
+                        Console.ForegroundColor = portOpen ? ConsoleColor.DarkGreen : ConsoleColor.DarkRed;
+                        Console.WriteLine(printResult);
+                        Console.ResetColor();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"#{++currentPack,4} Error pinging host {Host}: {ex.Message}");
+                        Console.ResetColor();
+                    }
+                }
+                if (!AutoStop || !allPortsOpen)
                 {
                     if (WaitTime > 0)
                     {
