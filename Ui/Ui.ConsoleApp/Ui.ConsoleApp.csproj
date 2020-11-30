@@ -1,32 +1,29 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>codingfreaks.pping.Ui.ConsoleApp</RootNamespace>
-    <AssemblyName>pping</AssemblyName>
-    <Authors>codingfreaks</Authors>
-    <Version>2.0.9</Version>
-    <Copyright>codingfreaks 2013-2020</Copyright>
-    <LangVersion>latest</LangVersion>  
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="codingfreaks.libs.Utilities" Version="2.0.4" />
-    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="verification.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="license.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="pping.nuspec">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net5.0</TargetFramework>
+		<RootNamespace>codingfreaks.pping.Ui.ConsoleApp</RootNamespace>
+		<AssemblyName>pping</AssemblyName>
+		<Authors>codingfreaks</Authors>
+		<Version>2.1.0</Version>
+		<Copyright>codingfreaks 2013-2020</Copyright>
+		<LangVersion>latest</LangVersion>
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="codingfreaks.libs.Utilities" Version="2.0.4" />
+		<PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.7" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="verification.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="license.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="pping.nuspec">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>

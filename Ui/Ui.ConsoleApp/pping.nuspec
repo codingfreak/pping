@@ -1,8 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>pping</id>
-    <version>2.0.9</version>
+    <version>2.1.0</version>
     <title>pping</title>
     <authors>Alexander Schmidt (codingfreaks)</authors>
     <projectUrl>https://codingfreaks.de/pping/</projectUrl>
@@ -13,9 +13,9 @@
     <tags>ping port dotnet codingfreaks</tags>
     <summary>Console application to scan for single or multiple open ports.</summary>
     <description>pping is a .NET Core console application which allowes you to scan any machine via TCP or UDP for single or multiple open ports. Its syntax is built with the ping-tool in mind.</description>
-    <releaseNotes>Bugfix due to misbehavior of async network functions.</releaseNotes>
+    <releaseNotes>Moved to .NET 5.0</releaseNotes>
     <dependencies>
-      <dependency id="dotnetcore-runtime" version="3.1.0" />
+      
     </dependencies>
   </metadata>
   <files>
