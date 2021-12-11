@@ -23,7 +23,7 @@ choco install pping
 
 Alternatively you can simply download the 7z-package from [codingfreaks.de](https://codingfreaks.de/tools) and unzip the files in any directory. It will make sense to add this directory to your PATH variable.
 
-**winget** We are NOT supporting the new Windows 11 package manage "winget" as long as this product requires complex installers like msi etc. We are providing an EXE and a json basically and thus think that an MSI for this would be overwhelming.
+**winget** We are NOT supporting the new Windows 11 package manager "winget" as long as this product requires complex installers like msi etc. We are providing an EXE and a json basically and thus think that an MSI for this would be overwhelming.
 
 ## Basic usage
 
