@@ -4,7 +4,7 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ui", "Ui", "{9A9CD6D3-5087-4AA9-9F92-28D4972BE00D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ui.ConsoleApp", "Ui\Ui.ConsoleApp\Ui.ConsoleApp.csproj", "{3B88994D-E5FC-49F9-946B-3860896665DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ui.ConsoleApp", "src\Ui\Ui.ConsoleApp\Ui.ConsoleApp.csproj", "{3B88994D-E5FC-49F9-946B-3860896665DA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
