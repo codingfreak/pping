@@ -1,4 +1,4 @@
-﻿$folder = ".\bin\Release\net6.0\win-x64\publish\"
+﻿$folder = ".\bin\Release\net9.0\win-x64\publish\"
 # Execute the dotnet publish command for self-contained EXE and Windows
 dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
 # Calculate the new Hash:
@@ -17,7 +17,7 @@ $xmlFile = $folder + "\pping.nuspec"
 [XML]$xml = Get-Content $xmlFile
 $version = $xml.package.metadata.version
 # push package to choco
-choco push $folder\pping.$version.nupkg
+choco push $folder\pping.$version.nupkg --source='https://push.chocolatey.org/' --api-key=$env:CHOCO_API_KEY
 # commit and push changea to verification txt
 git add .\verification.txt
 git commit -m "Changed verfication hash due to build"
