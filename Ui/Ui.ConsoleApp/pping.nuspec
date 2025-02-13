@@ -1,21 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>pping</id>
-    <version>3.0.0</version>
+    <version>4.0.0</version>
     <title>pping</title>
     <authors>Alexander Schmidt (codingfreaks)</authors>
     <projectUrl>https://codingfreaks.de/pping/</projectUrl>
     <iconUrl>https://codingfreaksarchive.de/files/codingfreaks.jpg</iconUrl>
-    <copyright>2013-2022 codingfreaks</copyright>
+    <copyright>2025 codingfreaks</copyright>
     <projectSourceUrl>https://github.com/codingfreak/pping</projectSourceUrl>
     <docsUrl>https://github.com/codingfreak/pping</docsUrl>
     <tags>ping port dotnet codingfreaks</tags>
     <summary>Console application to scan for single or multiple open ports.</summary>
     <description>pping is a .NET console application which allowes you to scan any machine via TCP or UDP for single or multiple open ports. Its syntax is built with the ping-tool in mind.</description>
-    <releaseNotes>Moved to .NET 6.0</releaseNotes>
-    <dependencies>
-      
+    <releaseNotes>Moved to .NET 9.0</releaseNotes>
+    <dependencies>      
     </dependencies>
   </metadata>
   <files>

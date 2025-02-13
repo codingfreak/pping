@@ -1,4 +1,4 @@
-$folder = ".\bin\Release\net6.0\win-x64\publish\"
+﻿$folder = ".\bin\Release\net6.0\win-x64\publish\"
 # Execute the dotnet publish command for self-contained EXE and Windows
 dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
 # Calculate the new Hash:

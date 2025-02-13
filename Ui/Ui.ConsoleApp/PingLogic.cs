@@ -9,8 +9,8 @@
     using System.Reflection;
     using System.Threading.Tasks;
 
-    using cfUtils.Logic.Core.Extensions;
-    using cfUtils.Logic.Core.Utilities;
+    using devdeer.Libraries.Utilities.Extensions;
+    using devdeer.Libraries.Utilities.Helpers;
 
     using McMaster.Extensions.CommandLineUtils;
 
@@ -32,7 +32,8 @@
         /// <returns>The SemVer-styled version of the assembly.</returns>
         private string GetVersion()
         {
-            return typeof(Program).Assembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            return typeof(Program).Assembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                ?.InformationalVersion;
         }
 
         /// <summary>
@@ -48,18 +49,20 @@
             {
                 Repeats = int.MaxValue;
             }
-            Console.WriteLine($"Starting pinging host {Host} on {ResolvedProtocol} port(s) {PortRange} {(Endless ? "infinite" : Repeats.ToString())} times:");
+            Console.WriteLine(
+                $"Starting pinging host {Host} on {ResolvedProtocol} port(s) {PortRange} {(Endless ? "infinite" : Repeats.ToString())} times:");
             var reachablePorts = 0;
             var closedPorts = 0;
             var hostIp = "-";
             if (ResvoleAddress)
             {
-                // we have to perform address resolution    
+                // we have to perform address resolution
                 var entry = await Dns.GetHostEntryAsync(Host);
                 if (entry.AddressList.Any())
                 {
                     var target = UseIpV4 ? AddressFamily.InterNetwork : AddressFamily.InterNetworkV6;
-                    hostIp = entry.AddressList.FirstOrDefault(he => he.AddressFamily == target)?.ToString() ?? "?";
+                    hostIp = entry.AddressList.FirstOrDefault(he => he.AddressFamily == target)
+                        ?.ToString() ?? "?";
                 }
             }
             // start the process
@@ -71,16 +74,23 @@
                 {
                     try
                     {
-                        var portOpen = NetworkUtil.IsPortOpened(Host, port, Timeout, UseUdp);
+                        var portOpen = NetworkHelper.IsPortOpened(Host, port, Timeout, UseUdp);
                         allPortsOpen &= portOpen;
                         reachablePorts += portOpen ? 1 : 0;
                         closedPorts += portOpen ? 0 : 1;
                         var printResult = portOpen ? "OPEN" : "CLOSED";
                         if (Detailed && !portOpen)
                         {
-                            printResult += $" ({NetworkUtil.LastCheckResult.ToString()})";
+                            printResult += $" ({NetworkHelper.LastCheckResult.ToString()})";
                         }
-                        Console.Write("#{0,4} -> Pinging host {1} (IP:{2}) on {5} port {3} with timeout {4}: ", ++currentPack, Host, hostIp, port, Timeout, ResolvedProtocol);
+                        Console.Write(
+                            "#{0,4} -> Pinging host {1} (IP:{2}) on {5} port {3} with timeout {4}: ",
+                            ++currentPack,
+                            Host,
+                            hostIp,
+                            port,
+                            Timeout,
+                            ResolvedProtocol);
                         Console.ForegroundColor = portOpen ? ConsoleColor.DarkGreen : ConsoleColor.DarkRed;
                         Console.WriteLine(printResult);
                         Console.ResetColor();
@@ -104,7 +114,13 @@
                     break;
                 }
             }
-            Console.WriteLine("Finished pinging host {0} (IP:{1}). {2} pings sent ({3} OPEN, {4} CLOSED)", Host, hostIp, currentPack, reachablePorts, closedPorts);
+            Console.WriteLine(
+                "Finished pinging host {0} (IP:{1}). {2} pings sent ({3} OPEN, {4} CLOSED)",
+                Host,
+                hostIp,
+                currentPack,
+                reachablePorts,
+                closedPorts);
             if (ReportFailedOnExit)
             {
                 // return error level 1 if all pings where closed and 0 if any of them was open
@@ -125,19 +141,28 @@
         /// <summary>
         /// If set, the app will stop working when it gets the first OPEN-result.
         /// </summary>
-        [Option("-a|--autostop", CommandOptionType.NoValue, Description = "If set, the app will stop working when it gets the first OPEN-result.")]
+        [Option(
+            "-a|--autostop",
+            CommandOptionType.NoValue,
+            Description = "If set, the app will stop working when it gets the first OPEN-result.")]
         public bool AutoStop { get; set; }
 
         /// <summary>
         /// If set, the app will output some more detailled states.
         /// </summary>
-        [Option("-d|--detailed", CommandOptionType.NoValue, Description = "If set, the app will output some more detailled states.")]
+        [Option(
+            "-d|--detailed",
+            CommandOptionType.NoValue,
+            Description = "If set, the app will output some more detailled states.")]
         public bool Detailed { get; set; }
 
         /// <summary>
         /// If set, the app will run infinitely. (see -a option).
         /// </summary>
-        [Option("-t|--endless", CommandOptionType.NoValue, Description = "If set, the app will run infinitely. (see -a option).")]
+        [Option(
+            "-t|--endless",
+            CommandOptionType.NoValue,
+            Description = "If set, the app will run infinitely. (see -a option).")]
         public bool Endless { get; set; }
 
         /// <summary>
@@ -151,37 +176,57 @@
         /// The port(s) to scan. Use '-' to specify a range of ports or list ports by separating them with ','.
         /// </summary>
         [Required]
-        [Argument(1, Name = "Port(s)", Description = "The port(s) to scan. Use '-' to specify a range of ports or list ports by separating them with ','.")]
+        [Argument(
+            1,
+            Name = "Port(s)",
+            Description =
+                "The port(s) to scan. Use '-' to specify a range of ports or list ports by separating them with ','.")]
         public string PortRange { get; set; }
 
         /// <summary>
         /// Defines the amount of requests which will be sent to the target (default is 4).
         /// </summary>
-        [Option("-r|--repeats", CommandOptionType.SingleValue, Description = "Defines the amount of requests which will be sent to the target (default is 4).")]
+        [Option(
+            "-r|--repeats",
+            CommandOptionType.SingleValue,
+            Description = "Defines the amount of requests which will be sent to the target (default is 4).")]
         public int Repeats { get; set; } = 4;
 
         /// <summary>
         /// If set, the app will return error level 0 on any open ping and error level 1 if all pings resulted in closed port.
         /// </summary>
-        [Option("-elf|--elfail", CommandOptionType.NoValue, Description = "If set, the app will return error level 0 on any open ping and error level 1 if all pings resulted in closed port.")]
+        [Option(
+            "-elf|--elfail",
+            CommandOptionType.NoValue,
+            Description =
+                "If set, the app will return error level 0 on any open ping and error level 1 if all pings resulted in closed port.")]
         public bool ReportFailedOnExit { get; set; }
 
         /// <summary>
         /// If set, the app will return the amount of successful port requests as the result code.
         /// </summary>
-        [Option("-els|--elsucc", CommandOptionType.NoValue, Description = "If set, the app will return the amount of successful port requests as the result code.")]
+        [Option(
+            "-els|--elsucc",
+            CommandOptionType.NoValue,
+            Description = "If set, the app will return the amount of successful port requests as the result code.")]
         public bool ReportSucceededOnExit { get; set; }
 
         /// <summary>
         /// If set, the app will resolve the DNS name of the target.
         /// </summary>
-        [Option("-res|--resolve", CommandOptionType.NoValue, Description = "If set, the app will resolve the DNS name of the target.")]
+        [Option(
+            "-res|--resolve",
+            CommandOptionType.NoValue,
+            Description = "If set, the app will resolve the DNS name of the target.")]
         public bool ResvoleAddress { get; set; }
 
         /// <summary>
         /// Defines the timeout in seconds the app will wait for each requests to return.
         /// </summary>
-        [Option("-tim|--timout", CommandOptionType.SingleValue, Description = "Defines the timeout in seconds the app will wait for each requests to return.")]
+        [Option(
+            "-tim|--timout",
+            CommandOptionType.SingleValue,
+            Description = "Defines the timeout in seconds the app will wait for each requests to return.")]
         public int Timeout { get; set; } = 1;
 
         /// <summary>
@@ -205,7 +250,10 @@
         /// <summary>
         /// Defines a time in milliseconds to wait between calls. Defaults to 1000.
         /// </summary>
-        [Option("-w|--wait", CommandOptionType.SingleValue, Description = "Defines a time in milliseconds to wait between calls. Defaults to 1000.")]
+        [Option(
+            "-w|--wait",
+            CommandOptionType.SingleValue,
+            Description = "Defines a time in milliseconds to wait between calls. Defaults to 1000.")]
         public int WaitTime { get; set; } = 1000;
 
         /// <summary>
@@ -223,7 +271,9 @@
                 var ports = new List<int>();
                 if (PortRange.Contains(","))
                 {
-                    PortRange.Split(',').ToList().ForEach(p => ports.Add(int.Parse(p.Trim())));
+                    PortRange.Split(',')
+                        .ToList()
+                        .ForEach(p => ports.Add(int.Parse(p.Trim())));
                 }
                 else
                 {
