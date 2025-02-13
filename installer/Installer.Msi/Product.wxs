@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="Installer.Msi" Language="1033" Version="1.0.0.0" Manufacturer="" UpgradeCode="920d0dd8-47fa-4bfa-9703-379bbe651de8">
+    <?if $(var.Platform)=x64?>
+    <?define ProductId="{3D3556F4-FE2E-47E4-9AE1-F4F231B23432}"?>
+    <?else?>
+    <?define ProductId="{D8EF7DED-DD36-44F3-9D51-C5309A553743}"?>
+    <?endif?>
+    <Product Id="$(var.ProductId)"
+             Name="pping"
+             Language="1033"
+             Version="4.0.0.0"
+             Manufacturer="codingfreaks"
+             UpgradeCode="920d0dd8-47fa-4bfa-9703-379bbe651de8">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
