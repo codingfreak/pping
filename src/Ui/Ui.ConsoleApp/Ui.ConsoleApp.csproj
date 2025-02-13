@@ -9,6 +9,9 @@
 		<Copyright>2025 codingfreaks</Copyright>
 		<LangVersion>latest</LangVersion>
 		<DebugType>embedded</DebugType>
+        <SelfContained>True</SelfContained>
+        <Platforms>AnyCPU;x64;x86;ARM32</Platforms>
+        <PublishAot>True</PublishAot>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="devdeer.Libraries.Utilities" Version="3.0.0" />
