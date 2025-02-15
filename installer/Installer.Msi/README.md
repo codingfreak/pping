@@ -18,7 +18,7 @@ brew install pandoc
 Then in the assets folder run
 
 ```shell
-pandoc -f markdown -s 1.md -o file.rtf
+pandoc -f markdown -s license.md -o license.rtf
 ```
 
 And rebuild the installer.
