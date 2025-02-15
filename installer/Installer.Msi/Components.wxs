@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <ComponentGroup Id="ProductComponents">
+            <ComponentRef Id="Executable" />
+            <ComponentRef Id="PathVariable" />
+        </ComponentGroup>
+        <DirectoryRef Id="INSTALLFOLDER" FileSource="$(var.Ui.ConsoleApp.ProjectDir)\publish\win-$(var.Platform)">
+            <Component Id="Executable" Guid="{8B106582-E888-4D3B-9AD1-6F99E0C6E327}">
+                <File Id="ExecutableFile" Name="pping.exe" KeyPath="yes" />
+            </Component>
+            <Component Id="PathVariable" Guid="{82C7C345-229D-4E38-B262-132B87435A1B}" KeyPath="yes">
+                <Environment                    
+                    Id="PathVariable"
+                    Name="PATH"
+                    Value="[INSTALLFOLDER]"
+                    Permanent="no"
+                    Part="last"
+                    Action="set"
+                    System="yes" />                
+            </Component>
+        </DirectoryRef>        
+    </Fragment>    
+</Wix>

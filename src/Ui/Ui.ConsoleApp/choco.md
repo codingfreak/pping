@@ -1,4 +1,4 @@
-You can perform all the steps in this file by simply `executing publish-choco-win64.ps1` in the project folder. Be 
+﻿You can perform all the steps in this file by simply `executing publish-choco-win64.ps1` in the project folder. Be 
 aware that before doing so you must:
 
 1. Increase the version number in the csproj.
@@ -17,8 +17,8 @@ aware that before doing so you must:
 3. Calculate the new Hash:
 
     ```
-    $hashExe = Get-FileHash .\bin\Release\netcoreapp3.1\publish\pping.exe | Select -ExpandProperty Hash 
-    $hashDll = Get-FileHash .\bin\Release\netcoreapp3.1\publish\pping.dll | Select -ExpandProperty Hash 
+    $hashExe = Get-FileHash .\bin\Release\net9.0\publish\pping.exe | Select -ExpandProperty Hash 
+    $hashDll = Get-FileHash .\bin\Release\net9.0\publish\pping.dll | Select -ExpandProperty Hash 
     ```
 
 4. Replace property in verification.txt:
@@ -31,22 +31,22 @@ aware that before doing so you must:
 5. Copy additional files to publish-folder:
 
     ```
-    cp pping.nuspec .\bin\Release\netcoreapp3.1\win-x64\publish\pping.nuspec
-    cp verification.txt .\bin\Release\netcoreapp3.1\win-x64\publish\verification.txt
-    cp license.txt .\bin\Release\netcoreapp3.1\win-x64\publish\license.txt
-    cp pping.runtimeconfig.json .\bin\Release\netcoreapp3.1\win-x64\publish\pping.runtimeconfig.json
+    cp pping.nuspec .\bin\Release\net9.0\win-x64\publish\pping.nuspec
+    cp verification.txt .\bin\Release\net9.0\win-x64\publish\verification.txt
+    cp license.txt .\bin\Release\net9.0\win-x64\publish\license.txt
+    cp pping.runtimeconfig.json .\bin\Release\net9.0\win-x64\publish\pping.runtimeconfig.json
     ```
 
 6. Generate choco package:
 
     ```
-    choco pack .\bin\Release\netcoreapp3.1\win-x64\publish\pping.nuspec --output-directory .\bin\Release\netcoreapp3.1\win-x64\publish\
+    choco pack .\bin\Release\net9.0\win-x64\publish\pping.nuspec --output-directory .\bin\Release\net9.0\win-x64\publish\
     ```
 
 7. Get version out of nuspec:
 
     ```
-    $xmlFile = ".\bin\Release\netcoreapp3.1\win-x64\publish\pping.nuspec"
+    $xmlFile = ".\bin\Release\net9.0\win-x64\publish\pping.nuspec"
     [XML]$xml = Get-Content $xmlFile
     $version = $xml.package.metadata.version
     ```
@@ -54,5 +54,5 @@ aware that before doing so you must:
 8. Push choco:
 
     ```
-    choco push .\bin\Release\netcoreapp3.1\win-x64\publish\pping.$version.nupkg
+    choco push .\bin\Release\net9.0\win-x64\publish\pping.$version.nupkg
     ```
