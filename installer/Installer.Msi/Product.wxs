@@ -1,40 +1,43 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <!-- Set different product ids depending on the current platform. -->
     <?if $(var.Platform)=x64?>
     <?define ProductId="{3D3556F4-FE2E-47E4-9AE1-F4F231B23432}"?>
     <?else?>
     <?define ProductId="{D8EF7DED-DD36-44F3-9D51-C5309A553743}"?>
     <?endif?>
+    <!-- TODO Figure out the version from the assembly instead! -->
+    <?define Version=4.0.0.0?>
+    <!-- Define upgrade code which never should be changed! -->
+    <?define UpgradeCode="{920d0dd8-47fa-4bfa-9703-379bbe651de8}"?>
     <Product Id="$(var.ProductId)"
-             Name="pping"
-             Language="1033"
-             Version="4.0.0.0"
-             Manufacturer="codingfreaks"
-             UpgradeCode="920d0dd8-47fa-4bfa-9703-379bbe651de8">
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
-
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate />
-
-		<Feature Id="ProductFeature" Title="Installer.Msi" Level="1">
+             UpgradeCode="$(var.UpgradeCode)"
+             Name="!(loc.ProductName)"
+             Manufacturer="!(loc.Company)"
+             Language="!(loc.LCID)"
+             Version="$(var.Version)">
+        <!-- Define package meta data. -->
+        <Package InstallerVersion="200"
+                 Compressed="yes"
+                 InstallScope="perMachine"
+                 Platform="$(var.Platform)"
+                 Manufacturer="!(loc.Company)"
+                 Description="!(loc.Description)"
+                 Keywords="!(loc.Keywords )"
+                 Comments="!(loc.Comments )"
+                 Languages="!(loc.LCID)"/>
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" />
+		<MediaTemplate EmbedCab="yes" />
+        <!-- Define and use app icon -->
+        <Icon Id="ProductIcon" SourceFile="$(var.Ui.ConsoleApp.ProjectDir)\codingfreaks.ico" />
+        <Property Id="ARPPRODUCTICON">ProductIcon</Property>
+        <Property Id="ARPURLINFOABOUT">https://codingfreaks.de/pping</Property>
+        <UIRef Id="WixUI_Minimal" />
+        <WixVariable Id="WixUIDialogBmp" Value="$(var.ProjectDir)\Assets\background.bmp" />
+        <WixVariable Id="WixUIBannerBmp" Value="$(var.ProjectDir)\Assets\banner.bmp" />
+        <WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\Assets\license.rtf" />
+        <Feature Id="ProductFeature" Title="!(loc.Produ ctName)" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
-	</Product>
-
-	<Fragment>
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="Installer.Msi" />
-			</Directory>
-		</Directory>
-	</Fragment>
-
-	<Fragment>
-		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
-			<!-- <Component Id="ProductComponent"> -->
-				<!-- TODO: Insert files, registry keys, and other resources here. -->
-			<!-- </Component> -->
-		</ComponentGroup>
-	</Fragment>
+	</Product>		
 </Wix>
