@@ -1,0 +1,1 @@
+﻿dotnet publish $PSScriptRoot\..\..\..\src\Ui\Ui.ConsoleApp -c Release -r osx-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true -o $PSScriptRoot\..\..\..\src\Ui\Ui.ConsoleApp\publish\osx-x64
