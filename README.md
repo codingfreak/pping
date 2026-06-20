@@ -1,3 +1,5 @@
+![GitHub Release](https://img.shields.io/github/v/release/codingfreak/pping?label=Github%20Release)&nbsp;&nbsp;![Chocolatey Downloads](https://img.shields.io/chocolatey/dt/pping?label=Chocolatey)
+
 # pping
 
 A multi-platform port ping.
@@ -8,10 +10,16 @@ pping is designed to give you the easiest possible solution for discovering port
 
 ## Implementation
 
-pping is developed using Microsoft .NET 6. pping uses logic from:
+pping is developed using Microsoft .NET 10. It is packaed as a self-contained .NET executable meaning that you do not need to install .NET runtime. It is available for
 
--   Our package [cfUtils](https://github.com/codingfreak/cfUtils).
--   McMaster CommandLineUtils [McMaster.Extensions.CommandLineUtils](https://www.nuget.org/packages/McMaster.Extensions.CommandLineUtils/)
+- Windows (x64)
+- Linux (x64)
+- MacOS (ARM and Intel)
+
+pping uses logic from:
+
+- The package my company DEVDEER provides for util-functions: [devdeer.Libraries.Utilities](https://www.nuget.org/packages/devdeer.Libraries.Utilities).
+- McMaster CommandLineUtils [McMaster.Extensions.CommandLineUtils](https://www.nuget.org/packages/McMaster.Extensions.CommandLineUtils/)
 
 ## Installation
 
@@ -21,7 +29,7 @@ The easiest way to get pping running on your machine is to use [chocolatey](<[ht
 choco install pping
 ```
 
-Alternatively you can simply download the 7z-package from [codingfreaks.de](https://codingfreaks.de/tools) and unzip the files in any directory. It will make sense to add this directory to your PATH variable.
+Alternatively you can simply download the zip-packages from [Github](https://github.com/codingfreak/pping/releases) or [codingfreaks.de](https://codingfreaks.de/pping) and unzip the files in any directory. It will make sense to add this directory to your PATH variable.
 
 **winget** We are NOT supporting the new Windows 11 package manager "winget" as long as this product requires complex installers like msi etc. We are providing an EXE and a json basically and thus think that an MSI for this would be overwhelming.
 
@@ -142,8 +150,7 @@ The following table lists all available options:
 
 Any positive number is returned if `-elsucc` or `-elfail` are defined. Those numbers will represent the successful or failed requests.
 
-| Code | Description
-|--- | ---
-| 0 | All provided ports where open.
-| -2 | `-res` flag was given but the hostname could not be resolved.
-
+| Code | Description                                                   |
+| ---- | ------------------------------------------------------------- |
+| 0    | All provided ports where open.                                |
+| -2   | `-res` flag was given but the hostname could not be resolved. |
