@@ -1,4 +1,4 @@
-﻿namespace codingfreaks.pping.Ui.ConsoleApp
+namespace codingfreaks.pping.Ui.ConsoleApp
 {
     using System;
     using System.Collections.Generic;
@@ -32,13 +32,18 @@
         /// <returns>The SemVer-styled version of the assembly.</returns>
         private string GetVersion()
         {
-            return typeof(Program).Assembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                ?.InformationalVersion;
+            var attribute = typeof(Program).Assembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+            var version = attribute?.InformationalVersion;
+            version = version?.Split('+')[0];
+            return version;
         }
 
         /// <summary>
         /// Gets called by the logic of the <see cref="CommandAttribute" />.
         /// </summary>
+        /// <returns>
+        /// The return code to be used as the process result.
+        /// </returns>
         private async Task<int> OnExecuteAsync()
         {
             if (UseIpV6)
@@ -57,7 +62,20 @@
             if (ResvoleAddress)
             {
                 // we have to perform address resolution
-                var entry = await Dns.GetHostEntryAsync(Host);
+                var entry = await Dns.GetHostEntryAsync(Host).ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                    {
+                        Console.WriteLine($"Could not resolve IP of host '{Host}'.");
+                        return null;
+                    }
+                    return t.Result;
+                });
+                if (entry == null)
+                {
+                    // Return the error code to define a failed DNS resolution.
+                    return -2;
+                }
                 if (entry.AddressList.Any())
                 {
                     var target = UseIpV4 ? AddressFamily.InterNetwork : AddressFamily.InterNetworkV6;
