@@ -1,0 +1,28 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/.sln/">
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Installer/">
+    <Project Path="installer/Installer.Msi/Installer.Msi.wixproj">
+      <Platform Solution="*|ARM" Project="x86" />
+      <Platform Solution="Debug|x64" Project="x86" />
+      <Build Solution="*|x64" />
+      <Build Solution="Debug|ARM" />
+      <Build Solution="Debug|x86" />
+    </Project>
+  </Folder>
+  <Folder Name="/Ui/">
+    <Project Path="src/Ui/Ui.ConsoleApp/Ui.ConsoleApp.csproj">
+      <Platform Solution="*|ARM" Project="ARM32" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Platform Solution="*|x86" Project="x86" />
+      <Build Solution="Release|x64" Project="false" />
+    </Project>
+  </Folder>
+</Solution>

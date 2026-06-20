@@ -137,3 +137,13 @@ The following table lists all available options:
 | d            | detailed  | -d      | If provided, pping will try to write reason details at closed ports to te console.                                 |
 | 4            | ipv4      | -4      | If provided, pping will use IPv4 for resolutions.                                                                  |
 | 6            | ipv6      | -6      | If provided, pping will use IPv6 for resolutions.                                                                  |
+
+## Exit codes
+
+Any positive number is returned if `-elsucc` or `-elfail` are defined. Those numbers will represent the successful or failed requests.
+
+| Code | Description
+|--- | ---
+| 0 | All provided ports where open.
+| -2 | `-res` flag was given but the hostname could not be resolved.
+
