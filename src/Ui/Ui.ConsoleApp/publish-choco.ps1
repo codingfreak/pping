@@ -18,7 +18,7 @@ $xmlFile = $folder + "\pping.nuspec"
 [XML]$xml = Get-Content $xmlFile
 $version = $xml.package.metadata.version
 # push package to choco
-choco push $folder\pping.$version.nupkg --source='https://push.chocolatey.org/' --api-key=$env:CHOCO_API_KEY
+choco push $folder\pping.$version.nupkg --source='https://push.chocolatey.org/' --api-key=$env:CHOCO_API_KEY --timeout=300
 # commit and push changea to verification txt
 git add .\verification.txt
 git commit -m "Changed verfication hash due to build"
