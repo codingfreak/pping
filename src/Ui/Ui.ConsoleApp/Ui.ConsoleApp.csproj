@@ -12,9 +12,9 @@
         <Platforms>AnyCPU;x64;x86;ARM32</Platforms>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="devdeer.Libraries.Utilities" Version="3.0.0" />
-		<PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
+		<PackageReference Include="devdeer.Libraries.Utilities" Version="5.0.0" />
+		<PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="5.1.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="verification.txt">
