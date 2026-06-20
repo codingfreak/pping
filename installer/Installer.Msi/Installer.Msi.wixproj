@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.14</ProductVersion>
-    <ProjectGuid>b1d698bb-dbc5-4fc2-8144-e29c1c2904b0</ProjectGuid>
+    <ProjectGuid>{4923e0b5-8795-5d5b-050f-805cdd54d47d}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>pping</OutputName>
     <OutputType>Package</OutputType>
