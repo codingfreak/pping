@@ -4,6 +4,10 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Folder Name="/.sln/">
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+  </Folder>
   <Folder Name="/Installer/">
     <Project Path="installer/Installer.Msi/Installer.Msi.wixproj">
       <Platform Solution="*|ARM" Project="x86" />
