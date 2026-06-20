@@ -21,6 +21,16 @@ pping uses logic from:
 - The package my company DEVDEER provides for util-functions: [devdeer.Libraries.Utilities](https://www.nuget.org/packages/devdeer.Libraries.Utilities).
 - McMaster CommandLineUtils [McMaster.Extensions.CommandLineUtils](https://www.nuget.org/packages/McMaster.Extensions.CommandLineUtils/)
 
+## Why not Test-NetConnection
+
+Many Windows users ask me why they would use pping since `Test-NetConnection` is a cmdlet there. So here are some reasons why I think pping is still relevant:
+
+- Better performance: `Test-NetConnection` will execute in the background if it does not find the port. You only get "feedback" after the timeout. pping has explicit timeouts and will come in the ping-known-form of immediate results.
+- Platform independent: You can use the same commands on Windows, Linux and MacOS.
+- Better output: The output of pping is inspired by the one from the good old `ping` command (hence the name) whereas `Test-NetConnection` returns a `TestNetConnectionResult` object.
+- `Test-NetConnection` will give you a success-exit-code even if the port could not be reached whereas pping allows you to pass `-elf` and will return an error code if the port wasn't reachable.
+- pping has a far simpler syntax.
+
 ## Installation
 
 The easiest way to get pping running on your machine is to use [chocolatey](<[https.//](https://chocolatey.org/)>) and install it:
